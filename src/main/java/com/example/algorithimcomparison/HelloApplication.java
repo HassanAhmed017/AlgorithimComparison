@@ -16,5 +16,6 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.show();
         System.out.println("TESTING Git");
+        System.out.println("TESTING Git");
     }
 }
