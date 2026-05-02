@@ -7,6 +7,10 @@ public class Process {
     private int burstTime;
     private int priority;
 
+    private int waitingTime;
+    private int turnaroundTime;
+    private int responseTime;
+
     public Process(String pid, int arrivalTime, int burstTime, int priority) {
         this.pid = pid;
         this.arrivalTime = arrivalTime;
@@ -14,33 +18,24 @@ public class Process {
         this.priority = priority;
     }
 
-    public String getPid() {
-        return pid;
+    public String getPid() { return pid; }
+    public int getArrivalTime() { return arrivalTime; }
+    public int getBurstTime() { return burstTime; }
+    public int getPriority() { return priority; }
+
+    public int getWaitingTime() { return waitingTime; }
+    public int getTurnaroundTime() { return turnaroundTime; }
+    public int getResponseTime() { return responseTime; }
+
+    public void setWaitingTime(int waitingTime) {
+        this.waitingTime = waitingTime;
     }
 
-    public int getArrivalTime() {
-        return arrivalTime;
+    public void setTurnaroundTime(int turnaroundTime) {
+        this.turnaroundTime = turnaroundTime;
     }
 
-    public int getBurstTime() {
-        return burstTime;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setBurstTime(int burstTime) {
-        this.burstTime = burstTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Process{" +
-                "pid='" + pid + '\'' +
-                ", arrivalTime=" + arrivalTime +
-                ", burstTime=" + burstTime +
-                ", priority=" + priority +
-                '}';
+    public void setResponseTime(int responseTime) {
+        this.responseTime = responseTime;
     }
 }
