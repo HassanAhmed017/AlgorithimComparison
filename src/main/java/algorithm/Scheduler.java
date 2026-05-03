@@ -42,7 +42,14 @@ public class Scheduler {
     static void enterQuantum(){
         int quantum = in.nextInt();
     }
+    static  void start(){
+        Process[] p_array = processes.toArray(new Process[processes.size()]);
+        Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
+        processes = new ArrayList<>(Arrays.asList(p_array)) ;
+        ArrayList<Process> processesrRR = new ArrayList<>(processes);
+        ArrayList<Process> processesrPQ = new ArrayList<>(processes);
 
+    }
 
 
     public static void main(String[] args) {
@@ -74,7 +81,7 @@ public class Scheduler {
                 enterQuantum();
                 break;
             case 5:
-                System.out.println("start");
+                start();
                 break;
             default:
                 System.out.println("Invalid choice. Please try again.");
