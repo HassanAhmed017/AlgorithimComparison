@@ -5,7 +5,7 @@ import model.Process;
 
 public class InputValidator {
 
-    public static void validateProcess(Process p, List<Process> processes) {
+    public static boolean validateProcess(Process p, List<Process> processes) {
 
         if (p == null) {
             throw new IllegalArgumentException("Process cannot be null.");
@@ -32,6 +32,7 @@ public class InputValidator {
             throw new IllegalArgumentException(
                     "Priority must be between 1 and 10 (1 = highest).");
         }
+        return false;
     }
 
     public static boolean isDuplicateId(int pid, List<Process> processes) {
@@ -51,7 +52,7 @@ public class InputValidator {
         }
     }
 
-    public static void validateProcessList(List<Process> processes) {
+    public static boolean validateProcessList(List<Process> processes) {
 
         if (processes == null || processes.isEmpty()) {
             throw new IllegalArgumentException("Process list cannot be empty.");
@@ -86,5 +87,6 @@ public class InputValidator {
                         "Process " + p.getPid() + " has invalid priority (must be 1-10).");
             }
         }
+        return false;
     }
 }
