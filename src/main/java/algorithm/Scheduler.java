@@ -1,13 +1,20 @@
 package algorithm;
 import java.util.*;
+import validation.InputValidator;
 
 import model.Process;
 
+import static validation.InputValidator.*;
+
 
 public class Scheduler {
+
     static Scanner in = new Scanner(System.in);
     static ArrayList<Process> processes = new ArrayList<Process>();
     static int quantum = 2;
+
+
+
 
     static void createProcess(){
         System.out.println("Enter process ID: ");
@@ -24,8 +31,13 @@ public class Scheduler {
 
         Process newP = new Process(processID ,processArivalTime, processburstTime, processPriority);
 
+        if(validateProcess(newP, processes) ){
         processes.add(newP);
+        }
+
+
     }
+
 
     static void removeProcess(int id){
         for (int i = 0; i < processes.size(); i++) {
@@ -36,24 +48,27 @@ public class Scheduler {
         }
     }
 
+
     static void Clear(){
         processes.clear();
     }
     static void enterQuantum(){
         int quantum = in.nextInt();
+        validateQuantum(quantum);
     }
     static  void start(){
         Process[] p_array = processes.toArray(new Process[processes.size()]);
         Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array)) ;
-        ArrayList<Process> processesrRR = new ArrayList<>(processes);
-        ArrayList<Process> processesrPQ = new ArrayList<>(processes);
+        if(validateProcessList(processes)){
+            ArrayList<Process> processesrRR = new ArrayList<>(processes);
+            ArrayList<Process> processesrPQ = new ArrayList<>(processes);
 
+        }
     }
 
 
     public static void main(String[] args) {
-
         int choice;
         //menu
         System.out.println("=== Scheduler Menu ==="); //shuld be removed when gui is added
@@ -88,8 +103,5 @@ public class Scheduler {
         }
 
     }
-
-
-
 
 }
