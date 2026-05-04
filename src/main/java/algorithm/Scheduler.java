@@ -1,8 +1,7 @@
 package algorithm;
 import java.util.*;
-import validation.InputValidator;
-
 import model.Process;
+import algorithm.RoundRobin;
 
 import static validation.InputValidator.*;
 
@@ -53,16 +52,23 @@ public class Scheduler {
         processes.clear();
     }
     static void enterQuantum(){
-        int quantum = in.nextInt();
+        quantum = in.nextInt();
         validateQuantum(quantum);
     }
+
+
+
     static  void start(){
         Process[] p_array = processes.toArray(new Process[processes.size()]);
         Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array)) ;
         if(validateProcessList(processes)){
-            ArrayList<Process> processesrRR = new ArrayList<>(processes);
-            ArrayList<Process> processesrPQ = new ArrayList<>(processes);
+            ArrayList<Process> processesRR = new ArrayList<>(processes);
+            ArrayList<Process> processesPQ = new ArrayList<>(processes);
+
+            RoundRobin rr = new RoundRobin();
+            rr.startRR(quantum,processesRR);
+
 
         }
     }
