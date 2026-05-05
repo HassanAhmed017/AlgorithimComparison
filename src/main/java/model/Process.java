@@ -4,19 +4,23 @@ public class Process {
 
     private int pid;
     private int arrivalTime;
-    private int burstTime;
+    private int brustTime;
+
+
+
+    private int remainigBurstTime; //Added this to stop when = 0
     private int priority;
 
-    private int waitingTime;
-    private int turnaroundTime;
-    private int responseTime;
-    private int finishTime; //I added this so I can calculate turnaround time easly
+    private int waitingTime; //Waiting Time = finishTime - ArrivalTime - BurstTime
+    private int turnaroundTime;//doneRR
+    private int responseTime; //doneRR
+    private int finishTime; //I added this so I can calculate turnaround time and waiting time easily
 
 
-    public Process(int pid, int arrivalTime, int burstTime, int priority) {
+    public Process(int pid, int arrivalTime, int remainigBurstTime, int priority) {
         this.pid = pid;
         this.arrivalTime = arrivalTime;
-        this.burstTime = burstTime;
+        this.remainigBurstTime = remainigBurstTime;
         this.priority = priority;
     }
 
@@ -28,16 +32,16 @@ public class Process {
         return arrivalTime;
     }
 
-    public void setBurstTime(int burstTime) {
-        this.burstTime = burstTime;
+    public void setRemainigBurstTime(int remainigBurstTime) {
+        this.remainigBurstTime = remainigBurstTime;
     }
 
     public void setPriority(int priority) {
         this.priority = priority;
     }
 
-    public int getBurstTime() {
-        return burstTime;
+    public int getRemainigBurstTime() {
+        return remainigBurstTime;
     }
 
     public int getPriority() {
@@ -59,6 +63,13 @@ public class Process {
         return finishTime;
     }
 
+    public int getBrustTime() {
+        return brustTime;
+    }
+
+    public void setBrustTime(int brustTime) {
+        this.brustTime = brustTime;
+    }
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = waitingTime;
     }
