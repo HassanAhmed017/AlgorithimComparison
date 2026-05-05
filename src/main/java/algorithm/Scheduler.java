@@ -31,7 +31,8 @@ public class Scheduler {
         Process newP = new Process(processID ,processArivalTime, processburstTime, processPriority);
 
         if(validateProcess(newP, processes) ){
-        processes.add(newP);
+            newP.setResponseTime(-1); //added to be compatible with condition in RR
+            processes.add(newP);
         }
 
 

@@ -23,7 +23,7 @@ public class InputValidator {
             throw new IllegalArgumentException("Arrival time cannot be negative.");
         }
 
-        if (p.getBurstTime() <= 0) {
+        if (p.getBrustTime() <= 0) {
             throw new IllegalArgumentException("Burst time must be greater than 0.");
         }
 
@@ -76,7 +76,7 @@ public class InputValidator {
                         "Process " + p.getPid() + " has invalid arrival time.");
             }
 
-            if (p.getBurstTime() <= 0) {
+            if (p.getBrustTime() <= 0) {
                 throw new IllegalArgumentException(
                         "Process " + p.getPid() + " has invalid burst time.");
             }
