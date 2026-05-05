@@ -17,13 +17,23 @@ public class RoundRobin {
             }
 
 
-            readyQRR.peek().setRemainigBurstTime(readyQRR.peek().getRemainigBurstTime()-quantum);
+            int remaining = readyQRR.peek().getRemainigBurstTime();
+
+            if(remaining <= quantum) {
+                // Process will finish this quantum
+                readyQRR.peek().setBrustTime(0);
+            } else {
+                // Process still has burst left after quantum
+                readyQRR.peek().setRemainigBurstTime(remaining - quantum);
+            }
+
+// Set response time if this is the first time running
             if(readyQRR.peek().getResponseTime() == -1){
                 readyQRR.peek().setResponseTime(RRCnt);
             }
 
             //turnAround & waiting times
-            if (readyQRR.peek().getRemainigBurstTime() == 0){
+            if (remaining == 0){
                 //TurnAroundTime
                 readyQRR.peek().setFinishTime(RRCnt+quantum);
                 readyQRR.peek().setTurnaroundTime(readyQRR.peek().getArrivalTime() - readyQRR.peek().getFinishTime());
