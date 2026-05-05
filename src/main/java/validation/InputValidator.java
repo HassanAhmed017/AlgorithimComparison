@@ -32,7 +32,7 @@ public class InputValidator {
             throw new IllegalArgumentException(
                     "Priority must be between 1 and 10 (1 = highest).");
         }
-        return false;
+        return true;
     }
 
     public static boolean isDuplicateId(int pid, List<Process> processes) {
@@ -87,6 +87,6 @@ public class InputValidator {
                         "Process " + p.getPid() + " has invalid priority (must be 1-10).");
             }
         }
-        return false;
+        return true;
     }
 }

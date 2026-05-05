@@ -9,7 +9,7 @@ public class RoundRobin {
         initializeReadyQ(processes);
         System.out.println(readyQRR); //here we print ready queue for the first time (remove sout in gui)
 
-
+    
     }
 
     void initializeReadyQ(ArrayList<Process> processes){
