@@ -70,6 +70,9 @@ public class Scheduler {
             RoundRobin rr = new RoundRobin();
             rr.startRR(quantum,processesRR);
 
+            PriorityScheduler pq = new PriorityScheduler();
+            pq.schedule(processesPQ,quantum);
+
 
         }
     }
