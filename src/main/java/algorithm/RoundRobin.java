@@ -22,9 +22,6 @@ public class RoundRobin {
 
     void startRR(int quantum, ArrayList<Process> processes) {
         initializeReadyQ(processes);
-        System.out.println(readyQRR); //here we print ready queue for the first time (remove sout in gui)
-
-
         timer.schedule(task, 0, 10000); //used to print the RQ every 10 seconds during runtime
 
         while (!readyQRR.isEmpty()) {
@@ -45,19 +42,19 @@ public class RoundRobin {
                 RRCnt += quantum;
             }
 
+            //turnAround & waiting times
             if (readyQRR.peek().getRemainigBurstTime() == 0){
                 //TurnAroundTime
                 readyQRR.peek().setFinishTime(RRCnt);
                 readyQRR.peek().setTurnaroundTime(readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime());
                 //WaitingTime = finishTime - ArrivalTime - BurstTime
                 readyQRR.peek().setWaitingTime(readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime() - readyQRR.peek().getBrustTime());
-                readyQRR.remove();
-            }
-            else{
+                readyQRR.poll();
+            } else {
                 readyQRR.add(readyQRR.peek());
                 readyQRR.poll();
             }
-            //turnAround & waiting times
+
 
 
         }

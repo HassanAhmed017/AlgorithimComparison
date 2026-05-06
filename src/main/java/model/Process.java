@@ -17,10 +17,10 @@ public class Process {
     private int finishTime; //I added this so I can calculate turnaround time and waiting time easily
 
 
-    public Process(int pid, int arrivalTime, int remainigBurstTime, int priority) {
+    public Process(int pid, int arrivalTime, int brustTime, int priority) {
         this.pid = pid;
         this.arrivalTime = arrivalTime;
-        this.remainigBurstTime = remainigBurstTime;
+        this.brustTime = brustTime;
         this.priority = priority;
     }
 
