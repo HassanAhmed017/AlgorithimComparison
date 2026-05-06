@@ -71,6 +71,10 @@ public class Scheduler {
             rr.startRR(quantum,processesRR);
 
 
+            PriorityScheduler pq = new PriorityScheduler();
+            pq.schedule(processesPQ,quantum);
+
+
 
         }
     }

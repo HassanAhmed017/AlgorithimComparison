@@ -22,6 +22,7 @@ public class Process {
         this.arrivalTime = arrivalTime;
         this.brustTime = brustTime;
         this.priority = priority;
+        this.remainigBurstTime = brustTime;
     }
 
     public int getPid() {
