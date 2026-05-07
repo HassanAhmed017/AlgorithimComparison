@@ -23,7 +23,7 @@ public class InputValidator {
             throw new IllegalArgumentException("Arrival time cannot be negative.");
         }
 
-        if (p.getBurstTime() <= 0) {
+        if (p.getBrustTime() <= 0) {
             throw new IllegalArgumentException("Burst time must be greater than 0.");
         }
 
@@ -32,7 +32,7 @@ public class InputValidator {
             throw new IllegalArgumentException(
                     "Priority must be between 1 and 10 (1 = highest).");
         }
-        return false;
+        return true;
     }
 
     public static boolean isDuplicateId(int pid, List<Process> processes) {
@@ -76,7 +76,7 @@ public class InputValidator {
                         "Process " + p.getPid() + " has invalid arrival time.");
             }
 
-            if (p.getBurstTime() <= 0) {
+            if (p.getBrustTime() <= 0) {
                 throw new IllegalArgumentException(
                         "Process " + p.getPid() + " has invalid burst time.");
             }
@@ -87,6 +87,6 @@ public class InputValidator {
                         "Process " + p.getPid() + " has invalid priority (must be 1-10).");
             }
         }
-        return false;
+        return true;
     }
 }

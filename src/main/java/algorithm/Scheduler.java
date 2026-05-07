@@ -2,6 +2,8 @@ package algorithm;
 import java.util.*;
 import model.Process;
 import algorithm.RoundRobin;
+import model.ScheduleResult;
+import model.SimulationResult;
 
 import static validation.InputValidator.*;
 
@@ -31,7 +33,8 @@ public class Scheduler {
         Process newP = new Process(processID ,processArivalTime, processburstTime, processPriority);
 
         if(validateProcess(newP, processes) ){
-        processes.add(newP);
+            newP.setResponseTime(-1); //added to be compatible with condition in RR
+            processes.add(newP);
         }
 
 
@@ -57,8 +60,8 @@ public class Scheduler {
     }
 
 
-
-    static  void start(){
+    /// static SimulationResult start()
+    public static SimulationResult start(){
         Process[] p_array = processes.toArray(new Process[processes.size()]);
         Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array)) ;
@@ -67,7 +70,12 @@ public class Scheduler {
             ArrayList<Process> processesPQ = new ArrayList<>(processes);
 
             RoundRobin rr = new RoundRobin();
-            rr.startRR(quantum,processesRR);
+            ScheduleResult rrResult = rr.startRR(quantum, processesRR);
+
+            PriorityScheduler pq = new PriorityScheduler();
+            ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
+
+            return new SimulationResult(rrResult, pqResult);
 
 
         }
