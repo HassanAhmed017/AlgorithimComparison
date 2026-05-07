@@ -116,7 +116,8 @@ public class PriorityScheduler {
         }
 
         return new ScheduleResult(
-                gantt, null, null, null, null,
+                gantt,
+                processesPQ,
                 totalW / n,
                 totalT / n,
                 totalR / n
