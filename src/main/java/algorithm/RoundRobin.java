@@ -17,9 +17,6 @@ public class RoundRobin {
         @Override
         public void run() {
             printRQRR();
-            if (readyQRR.isEmpty()) {
-                timer.cancel();
-            }
         }
     };
 
@@ -43,13 +40,15 @@ public class RoundRobin {
             if (remaining <= quantum) {
                 readyQRR.peek().setRemainigBurstTime(0);
                 String PID = String.valueOf(readyQRR.peek().getPid());
-                GanttBlock box = new GanttBlock(PID , RRCnt , remaining);
+                int endTimeBox = RRCnt + remaining ;
+                GanttBlock box = new GanttBlock(PID , RRCnt , endTimeBox);
                 gantt.add(box);
                 RRCnt += remaining;
             } else {
                 readyQRR.peek().setRemainigBurstTime(remaining - quantum);
                 String PID = String.valueOf(readyQRR.peek().getPid());
-                GanttBlock box = new GanttBlock(PID , RRCnt , (RRCnt + quantum));
+                int endTimeBox = RRCnt + quantum ;
+                GanttBlock box = new GanttBlock(PID , RRCnt , endTimeBox);
                 gantt.add(box);
                 RRCnt += quantum;
             }
@@ -72,6 +71,7 @@ public class RoundRobin {
         }
         ScheduleResult resultRR = calcAVGRR(processes);
 
+        timer.cancel();
         return resultRR;
     }
 
@@ -86,9 +86,9 @@ public class RoundRobin {
     }
 
     ScheduleResult calcAVGRR(ArrayList<Process> processes){
-        int sumTAT = 0;
-        int sumRT = 0;
-        int sumWT = 0;
+        double sumTAT = 0;
+        double sumRT = 0;
+        double sumWT = 0;
         int n = processes.size();
         for (int i = 0 ; i < n ; i++){
             sumTAT += processes.get(i).getTurnaroundTime();

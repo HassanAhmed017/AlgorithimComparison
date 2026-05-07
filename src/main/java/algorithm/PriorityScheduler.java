@@ -8,8 +8,9 @@ import model.ScheduleResult;
 public class PriorityScheduler {
     private static void updateGantt(ArrayList<GanttBlock> gantt, String pid, int time) {
         if (!gantt.isEmpty() && gantt.get(gantt.size() - 1).getPid().equals(pid)) {
-            GanttBlock last = gantt.get(gantt.size() - 1);
-            gantt.set(gantt.size() - 1, new GanttBlock(pid, last.getStartTime(), time + 1));
+            int startTime = gantt.get(gantt.size() - 1).getStartTime();
+            gantt.remove(gantt.size() - 1);
+            gantt.add(new GanttBlock(pid, startTime, time + 1));
         } else {
             gantt.add(new GanttBlock(pid, time, time + 1));
         }
@@ -17,15 +18,10 @@ public class PriorityScheduler {
     public static ScheduleResult schedule(ArrayList<Process> processesPQ, int quantum) {
 
         Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-           @Override
-            public void run() {
-               System.out.println("Current Ready Queue: " + processesPQ);
-            }
-        };
-
-        timer.schedule(task, 0, 5000);
-
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {}
+        }, 0, 5000);
 
         ArrayList<GanttBlock> gantt = new ArrayList<>();
         int n = processesPQ.size();
@@ -34,7 +30,6 @@ public class PriorityScheduler {
         int[] response = new int[n];
         int[] waiting = new int[n];
         int[] turnaround = new int[n];
-
         boolean[] started = new boolean[n];
         int[] lastExecution = new int[n];
 
@@ -52,18 +47,16 @@ public class PriorityScheduler {
             int bestPriority = Integer.MAX_VALUE;
 
             for (int i = 0; i < n; i++) {
-                Process p = processesPQ.get(i);
-                if (p.getArrivalTime() <= time && remaining[i] > 0) {
-                    if (p.getPriority() < bestPriority) {
-                        bestPriority = p.getPriority();
+                if (processesPQ.get(i).getArrivalTime() <= time && remaining[i] > 0) {
+                    if (processesPQ.get(i).getPriority() < bestPriority) {
+                        bestPriority = processesPQ.get(i).getPriority();
                     }
                 }
             }
 
             ArrayList<Integer> readyList = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                Process p = processesPQ.get(i);
-                if (p.getArrivalTime() <= time && remaining[i] > 0 && p.getPriority() == bestPriority) {
+                if (processesPQ.get(i).getArrivalTime() <= time && remaining[i] > 0 && processesPQ.get(i).getPriority() == bestPriority) {
                     readyList.add(i);
                 }
             }
@@ -71,6 +64,7 @@ public class PriorityScheduler {
             if (readyList.isEmpty()) {
                 updateGantt(gantt, "IDLE", time);
                 time++;
+                qCounter = 0;
                 continue;
             }
 
@@ -79,8 +73,7 @@ public class PriorityScheduler {
                 selected = lastIdx;
             } else {
                 int oldest = Integer.MAX_VALUE;
-                for (int j = 0; j < readyList.size(); j++) {
-                    int idx = readyList.get(j);
+                for (int idx : readyList) {
                     if (lastExecution[idx] < oldest) {
                         oldest = lastExecution[idx];
                         selected = idx;
@@ -92,16 +85,14 @@ public class PriorityScheduler {
             Process p = processesPQ.get(selected);
 
             if (!started[selected]) {
-                response[selected] = time - p.getArrivalTime();
+                response[selected] = time;
                 started[selected] = true;
             }
 
             updateGantt(gantt, "P" + p.getPid(), time);
 
             remaining[selected]--;
-
             p.setRemainigBurstTime(remaining[selected]);
-
             time++;
             qCounter++;
             lastExecution[selected] = time;
@@ -127,7 +118,7 @@ public class PriorityScheduler {
         for (int i = 0; i < n; i++) {
             totalW += waiting[i];
             totalT += turnaround[i];
-            totalR += response[i];
+            totalR += (response[i] - processesPQ.get(i).getArrivalTime());
         }
 
         return new ScheduleResult(
