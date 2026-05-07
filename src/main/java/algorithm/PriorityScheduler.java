@@ -6,17 +6,25 @@ import model.Process;
 import model.ScheduleResult;
 
 public class PriorityScheduler {
+    private static void updateGantt(ArrayList<GanttBlock> gantt, String pid, int time) {
+        if (!gantt.isEmpty() && gantt.get(gantt.size() - 1).getPid().equals(pid)) {
+            GanttBlock last = gantt.get(gantt.size() - 1);
+            gantt.set(gantt.size() - 1, new GanttBlock(pid, last.getStartTime(), time + 1));
+        } else {
+            gantt.add(new GanttBlock(pid, time, time + 1));
+        }
+    }
     public static ScheduleResult schedule(ArrayList<Process> processesPQ, int quantum) {
 
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
-            @Override
+           @Override
             public void run() {
-                System.out.println("Current Processes: " + processesPQ);
+               System.out.println("Current Processes: " + processesPQ);
             }
         };
 
-        timer.schedule(task, 0, 10000);
+        timer.schedule(task, 0, 300);
 
 
         ArrayList<GanttBlock> gantt = new ArrayList<>();
@@ -61,6 +69,7 @@ public class PriorityScheduler {
             }
 
             if (readyList.isEmpty()) {
+                updateGantt(gantt, "IDLE", time);
                 time++;
                 continue;
             }
@@ -87,13 +96,7 @@ public class PriorityScheduler {
                 started[selected] = true;
             }
 
-            String pid = "P" + p.getPid();
-            if (!gantt.isEmpty() && gantt.get(gantt.size() - 1).getPid().equals(pid)) {
-                GanttBlock last = gantt.get(gantt.size() - 1);
-                gantt.set(gantt.size() - 1, new GanttBlock(pid, last.getStartTime(), time + 1));
-            } else {
-                gantt.add(new GanttBlock(pid, time, time + 1));
-            }
+            updateGantt(gantt, "P" + p.getPid(), time);
 
             remaining[selected]--;
 
