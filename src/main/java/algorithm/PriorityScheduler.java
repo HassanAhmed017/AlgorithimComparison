@@ -1,4 +1,5 @@
 package algorithm;
+
 import java.util.*;
 import model.GanttBlock;
 import model.Process;
@@ -6,6 +7,17 @@ import model.ScheduleResult;
 
 public class PriorityScheduler {
     public static ScheduleResult schedule(ArrayList<Process> processesPQ, int quantum) {
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("Current Processes: " + processesPQ);
+            }
+        };
+
+        timer.schedule(task, 0, 10000);
+
 
         ArrayList<GanttBlock> gantt = new ArrayList<>();
         int n = processesPQ.size();
@@ -29,7 +41,6 @@ public class PriorityScheduler {
         int qCounter = 0;
 
         while (completed < n) {
-
             int bestPriority = Integer.MAX_VALUE;
 
             for (int i = 0; i < n; i++) {
@@ -42,7 +53,6 @@ public class PriorityScheduler {
             }
 
             ArrayList<Integer> readyList = new ArrayList<>();
-
             for (int i = 0; i < n; i++) {
                 Process p = processesPQ.get(i);
                 if (p.getArrivalTime() <= time && remaining[i] > 0 && p.getPriority() == bestPriority) {
@@ -56,14 +66,12 @@ public class PriorityScheduler {
             }
 
             int selected = -1;
-
             if (lastIdx != -1 && readyList.contains(lastIdx) && qCounter < quantum) {
                 selected = lastIdx;
             } else {
                 int oldest = Integer.MAX_VALUE;
                 for (int j = 0; j < readyList.size(); j++) {
                     int idx = readyList.get(j);
-
                     if (lastExecution[idx] < oldest) {
                         oldest = lastExecution[idx];
                         selected = idx;
@@ -88,6 +96,9 @@ public class PriorityScheduler {
             }
 
             remaining[selected]--;
+
+            p.setRemainigBurstTime(remaining[selected]);
+
             time++;
             qCounter++;
             lastExecution[selected] = time;
@@ -95,7 +106,6 @@ public class PriorityScheduler {
 
             if (remaining[selected] == 0) {
                 completed++;
-
                 turnaround[selected] = time - p.getArrivalTime();
                 waiting[selected] = turnaround[selected] - p.getBrustTime();
 
@@ -107,6 +117,8 @@ public class PriorityScheduler {
                 qCounter = 0;
             }
         }
+
+        timer.cancel();
 
         double totalW = 0, totalT = 0, totalR = 0;
         for (int i = 0; i < n; i++) {
