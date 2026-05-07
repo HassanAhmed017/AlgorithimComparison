@@ -20,11 +20,11 @@ public class PriorityScheduler {
         TimerTask task = new TimerTask() {
            @Override
             public void run() {
-               System.out.println("Current Processes: " + processesPQ);
+               System.out.println("Current Ready Queue: " + processesPQ);
             }
         };
 
-        timer.schedule(task, 0, 300);
+        timer.schedule(task, 0, 5000);
 
 
         ArrayList<GanttBlock> gantt = new ArrayList<>();

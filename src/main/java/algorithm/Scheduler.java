@@ -76,9 +76,8 @@ public class Scheduler {
             ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
 
             return new SimulationResult(rrResult, pqResult);
-
-
         }
+        return null;
     }
 
 
