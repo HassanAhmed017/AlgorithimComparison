@@ -1,11 +1,14 @@
 package algorithm;
 
 import java.util.*;
-
+import model.GanttBlock;
 import model.Process;
+import model.ScheduleResult;
 
 public class RoundRobin {
+    //gantt block and idle 
     private Queue<Process> readyQRR = new LinkedList<>();
+    ArrayList<GanttBlock> gantt = new ArrayList<>();
 
     private int RRCnt = 0;//start of the process
 
@@ -14,21 +17,18 @@ public class RoundRobin {
         @Override
         public void run() {
             printRQRR();
-            if (readyQRR.isEmpty()) {
-                timer.cancel();
-            }
         }
     };
 
-    void startRR(int quantum, ArrayList<Process> processes) {
+    ScheduleResult startRR(int quantum, ArrayList<Process> processes) {
         initializeReadyQ(processes);
-        System.out.println(readyQRR); //here we print ready queue for the first time (remove sout in gui)
 
-
-        timer.schedule(task, 0, 10000); //used to print the RQ every 10 seconds during runtime
+        timer.schedule(task, 0, 5000); //used to print the RQ every 10 seconds during runtime
 
         while (!readyQRR.isEmpty()) {
             if (RRCnt < readyQRR.peek().getArrivalTime()) {
+                GanttBlock idle = new GanttBlock("IDLE", RRCnt , readyQRR.peek().getArrivalTime());
+                gantt.add(idle);
                 RRCnt = readyQRR.peek().getArrivalTime();
             }
 
@@ -39,11 +39,20 @@ public class RoundRobin {
             int remaining = readyQRR.peek().getRemainigBurstTime();
             if (remaining <= quantum) {
                 readyQRR.peek().setRemainigBurstTime(0);
+                String PID = String.valueOf(readyQRR.peek().getPid());
+                int endTimeBox = RRCnt + remaining ;
+                GanttBlock box = new GanttBlock(PID , RRCnt , endTimeBox);
+                gantt.add(box);
                 RRCnt += remaining;
             } else {
                 readyQRR.peek().setRemainigBurstTime(remaining - quantum);
+                String PID = String.valueOf(readyQRR.peek().getPid());
+                int endTimeBox = RRCnt + quantum ;
+                GanttBlock box = new GanttBlock(PID , RRCnt , endTimeBox);
+                gantt.add(box);
                 RRCnt += quantum;
             }
+
 
             if (readyQRR.peek().getRemainigBurstTime() == 0){
                 //TurnAroundTime
@@ -51,17 +60,19 @@ public class RoundRobin {
                 readyQRR.peek().setTurnaroundTime(readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime());
                 //WaitingTime = finishTime - ArrivalTime - BurstTime
                 readyQRR.peek().setWaitingTime(readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime() - readyQRR.peek().getBrustTime());
-                readyQRR.remove();
+                readyQRR.poll();
             }
             else{
                 readyQRR.add(readyQRR.peek());
                 readyQRR.poll();
             }
-            //turnAround & waiting times
 
 
         }
+        ScheduleResult resultRR = calcAVGRR(processes);
 
+        timer.cancel();
+        return resultRR;
     }
 
     void initializeReadyQ(ArrayList<Process> processes) {
@@ -71,9 +82,21 @@ public class RoundRobin {
     }
 
     void printRQRR() {
-        System.out.println(readyQRR);
+        System.out.println("Current Ready Queue: "+ readyQRR);
     }
 
+    ScheduleResult calcAVGRR(ArrayList<Process> processes){
+        double sumTAT = 0;
+        double sumRT = 0;
+        double sumWT = 0;
+        int n = processes.size();
+        for (int i = 0 ; i < n ; i++){
+            sumTAT += processes.get(i).getTurnaroundTime();
+            sumRT += processes.get(i).getResponseTime();
+            sumWT += processes.get(i).getWaitingTime();
+        }
+        return new ScheduleResult(
+                gantt, processes, sumWT / n, sumTAT / n, sumRT / n);
+    }
 
 }
-//write a function for PQ of same P

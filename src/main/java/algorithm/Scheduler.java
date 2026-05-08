@@ -1,7 +1,6 @@
 package algorithm;
 import java.util.*;
 import model.Process;
-import algorithm.RoundRobin;
 import model.ScheduleResult;
 import model.SimulationResult;
 
@@ -14,7 +13,20 @@ public class Scheduler {
     static ArrayList<Process> processes = new ArrayList<Process>();
     static int quantum = 2;
 
-
+    static ArrayList<Process> deepCopy(ArrayList<Process> original) {
+        ArrayList<Process> copy = new ArrayList<>();
+        for (Process p : original) {
+            Process newP = new Process(
+                    p.getPid(),
+                    p.getArrivalTime(),
+                    p.getBrustTime(),
+                    p.getPriority()
+            );
+            newP.setResponseTime(-1);
+            copy.add(newP);
+        }
+        return copy;
+    }
 
 
     static void createProcess(){
@@ -55,8 +67,9 @@ public class Scheduler {
         processes.clear();
     }
     static void enterQuantum(){
-        quantum = in.nextInt();
-        validateQuantum(quantum);
+        int temp = in.nextInt();
+        validateQuantum(temp);
+        quantum = temp;
     }
 
 
@@ -66,8 +79,9 @@ public class Scheduler {
         Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array)) ;
         if(validateProcessList(processes)){
-            ArrayList<Process> processesRR = new ArrayList<>(processes);
-            ArrayList<Process> processesPQ = new ArrayList<>(processes);
+            //made it deep copy because shallow copy isn't safe
+            ArrayList<Process> processesRR = deepCopy(processes);
+            ArrayList<Process> processesPQ = deepCopy(processes);
 
             RoundRobin rr = new RoundRobin();
             ScheduleResult rrResult = rr.startRR(quantum, processesRR);
@@ -76,46 +90,48 @@ public class Scheduler {
             ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
 
             return new SimulationResult(rrResult, pqResult);
-
-
         }
+        return null;
     }
 
 
     public static void main(String[] args) {
         int choice;
-        //menu
-        System.out.println("=== Scheduler Menu ==="); //shuld be removed when gui is added
-        System.out.println("1. create process");
-        System.out.println("2. delete process");
-        System.out.println("3. clear processes");
-        System.out.println("4. Enter Quantum");
-        System.out.println("5. start simulation");
-        System.out.print("Enter your choice: ");
-        choice = in.nextInt();
+        while (true) { //added for testing gets removed when gui
+            System.out.println("=== Scheduler Menu ==="); //shuld be removed when gui is added
+            System.out.println("1. create process");
+            System.out.println("2. delete process");
+            System.out.println("3. clear processes");
+            System.out.println("4. Enter Quantum");
+            System.out.println("5. start simulation");
+            System.out.println("6. Exit"); //for testing
+            System.out.print("Enter your choice: ");
+            choice = in.nextInt();
 
-        switch (choice) {
-            case 1:
-                 createProcess();
-                break;
-            case 2:
-                System.out.println("Enter the ID of the process you want to remove:");
-                int id = in.nextInt();
-                removeProcess(id);
-                break;
-            case 3:
-                Clear();
-                break;
-            case 4:
-                enterQuantum();
-                break;
-            case 5:
-                start();
-                break;
-            default:
-                System.out.println("Invalid choice. Please try again.");
+            switch (choice) {
+                case 1:
+                    createProcess();
+                    break;
+                case 2:
+                    System.out.println("Enter the ID of the process you want to remove:");
+                    int id = in.nextInt();
+                    removeProcess(id);
+                    break;
+                case 3:
+                    Clear();
+                    break;
+                case 4:
+                    enterQuantum();
+                    break;
+                case 5:
+                    start();
+                    break;
+                case 6: //for testing
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+
         }
-
     }
-
 }
