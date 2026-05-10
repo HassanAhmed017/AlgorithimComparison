@@ -10,6 +10,7 @@ module com.example.algorithimcomparison {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires junit;
 
     opens com.example.algorithimcomparison to javafx.fxml;
     exports com.example.algorithimcomparison;

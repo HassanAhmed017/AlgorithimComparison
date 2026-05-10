@@ -44,9 +44,20 @@ public class Scheduler {
 
         Process newP = new Process(processID ,processArivalTime, processburstTime, processPriority);
 
-        if(validateProcess(newP, processes) ){
-            newP.setResponseTime(-1); //added to be compatible with condition in RR
+        // I remove if condition to wrap validateProcessList(processes) in 'try catch' to handle it in case of exception
+
+        try {
+
+            validateProcess(newP, processes);
+
+            newP.setResponseTime(-1);
             processes.add(newP);
+
+            System.out.println("Process added successfully.");
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println("Validation Error: " + e.getMessage());
         }
 
 
@@ -78,8 +89,11 @@ public class Scheduler {
         Process[] p_array = processes.toArray(new Process[processes.size()]);
         Arrays.sort(p_array , Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array)) ;
-        if(validateProcessList(processes)){
-            //made it deep copy because shallow copy isn't safe
+        // I remove if condition to wrap validateProcessList(processes) in 'try catch' to handle it in case of exception
+        try {
+
+            validateProcessList(processes);
+
             ArrayList<Process> processesRR = deepCopy(processes);
             ArrayList<Process> processesPQ = deepCopy(processes);
 
@@ -90,6 +104,9 @@ public class Scheduler {
             ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
 
             return new SimulationResult(rrResult, pqResult);
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Validation Error: " + e.getMessage());
         }
         return null;
     }
