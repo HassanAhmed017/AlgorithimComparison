@@ -151,4 +151,121 @@
                             <Label fx:id="rrAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" />
                         </VBox>
 
-}
+                        <!-- Priority Column -->
+                        <VBox prefWidth="430" spacing="10" style="-fx-background-color: #243F3F;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 6;                                    -fx-padding: 12;">
+
+                            <Label text="② PRIORITY SCHEDULING" textFill="WHITE">
+                                <font>
+                                    <Font name="System Bold" size="13.0" />
+                                </font>
+                            </Label>
+
+                            <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Gantt Chart" textFill="#FFD700" />
+
+                            <ScrollPane fx:id="pqGanttScroll" fitToHeight="true" prefHeight="95" style="-fx-background-color: #1C3333;                                        -fx-background: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;">
+                                <content>
+                                    <Pane fx:id="pqGanttPane" prefHeight="75" style="-fx-background-color: #1C3333;">
+                                        <padding>
+                                            <Insets bottom="8" left="8" right="8" top="8" />
+                                        </padding>
+                                    </Pane>
+                                </content>
+                            </ScrollPane>
+
+                            <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Results Table" textFill="#FFD700" />
+
+                            <TableView fx:id="pqResultTable" prefHeight="210" style="-fx-background-color: white;                                        -fx-table-cell-border-color: black;                                        -fx-border-color: black;                                        -fx-border-width: 1;">
+                                <columns>
+                                    <TableColumn fx:id="pqColPid" prefWidth="65" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="PID" />
+                                    <TableColumn fx:id="pqColFt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="FT" />
+                                    <TableColumn fx:id="pqColTat" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="TAT" />
+                                    <TableColumn fx:id="pqColWt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="WT" />
+                                    <TableColumn fx:id="pqColRt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="RT" />
+                                </columns>
+                            </TableView>
+
+                            <Label fx:id="pqAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" />
+                        </VBox>
+                    </HBox>
+
+                    <!-- Comparison Summary -->
+                    <VBox spacing="2" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-padding: 12;">
+
+                        <Label style="-fx-font-size: 13px;                                       -fx-font-weight: bold;" text="③ COMPARISON SUMMARY" textFill="WHITE">
+                        </Label>
+
+                        <VBox spacing="0" style="-fx-padding: 8 0 0 0;">
+
+                            <!-- Header Row -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Metric" />
+                                <Label prefWidth="160" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Round Robin" />
+                                <Label prefWidth="160" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Priority" />
+                            </HBox>
+
+                            <!-- Avg Waiting Time -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Waiting Time" />
+                                <Label fx:id="rrAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                                <Label fx:id="pqAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                            </HBox>
+
+                            <!-- Avg Turnaround Time -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Turnaround Time" />
+                                <Label fx:id="rrAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                                <Label fx:id="pqAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                            </HBox>
+
+                            <!-- Avg Response Time -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Response Time" />
+                                <Label fx:id="rrAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                                <Label fx:id="pqAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
+                            </HBox>
+
+                            <!-- Starvation Risk -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Starvation Risk" />
+                                <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                            -fx-font-weight: bold;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="None ✓" />
+                                <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                            -fx-font-weight: bold;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Possible ⚠" />
+                            </HBox>
+
+                            <!-- Fairness -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Fairness" />
+                                <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                            -fx-font-weight: bold;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="High ✓" />
+                                <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                            -fx-font-weight: bold;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Low ✗" />
+                            </HBox>
+
+                            <!-- Best For -->
+                            <HBox>
+                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Best For" />
+                                <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Interactive Systems" />
+                                <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Batch / Priority Jobs" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Conclusion Section -->
+                    <VBox spacing="10" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-padding: 12;">
+
+                        <Label text="④ FINAL CONCLUSION" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="13.0" />
+                            </font>
+                        </Label>
+
+                        <VBox fx:id="conclusionContent" spacing="8" />
+
+                        <Label style="-fx-font-size: 11px;                                       -fx-font-weight: bold;" text="Written Conclusion" textFill="#FFD700" />
+
+                        <TextArea fx:id="conclusionText" editable="false" prefHeight="180" style="-fx-control-inner-background: #1C3333;                                    -fx-text-fill: white;                                    -fx-font-size: 12;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;" text="Run the simulation to generate the conclusion." wrapText="true" />
+                    </VBox>
+
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
