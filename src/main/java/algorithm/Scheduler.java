@@ -10,8 +10,8 @@ import static validation.InputValidator.*;
 public class Scheduler {
 
     static Scanner in = new Scanner(System.in);
-    static ArrayList<Process> processes = new ArrayList<Process>();
-    static int quantum = 2;
+    public static ArrayList<Process> processes = new ArrayList<Process>();
+    public static int quantum = 2;
 
     static ArrayList<Process> deepCopy(ArrayList<Process> original) {
         ArrayList<Process> copy = new ArrayList<>();
