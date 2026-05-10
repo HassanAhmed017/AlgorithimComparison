@@ -33,60 +33,60 @@ public class PriorityScheduler {
         int[] lastExecution = new int[n];
 
         // Priority Inheritance tracking
-        int[] originalPriority = new int[n];
-
-        boolean[] holdsResource = new boolean[n];
-        boolean[] needsResource = new boolean[n];
-        boolean[] blocked = new boolean[n];
+//        int[] originalPriority = new int[n];
+//
+//        boolean[] holdsResource = new boolean[n];
+//        boolean[] needsResource = new boolean[n];
+//        boolean[] blocked = new boolean[n];
 
         for (int i = 0; i < n; i++) {
             remaining[i] = processesPQ.get(i).getRemainigBurstTime();
             lastExecution[i] = -1;
-            originalPriority[i] = processesPQ.get(i).getPriority();
+            //originalPriority[i] = processesPQ.get(i).getPriority();
         }
 
         // Setup Priority Inversion scenario
-        Resource sharedResource = new Resource("LockA");
+        //Resource sharedResource = new Resource("LockA");
 
-        boolean resourceScenario = false;
+//        boolean resourceScenario = false;
+//
+//        int lowestPriIdx = -1;
+//        int highestPriIdx = -1;
+//
+//        int lowestPriVal = Integer.MIN_VALUE;
+//        int highestPriVal = Integer.MAX_VALUE;
+//
+//        for (int i = 0; i < n; i++) {
+//
+//            int pri = processesPQ.get(i).getPriority();
+//
+//            if (pri > lowestPriVal) {
+//                lowestPriVal = pri;
+//                lowestPriIdx = i;
+//            }
+//
+//            if (pri < highestPriVal) {
+//                highestPriVal = pri;
+//                highestPriIdx = i;
+//            }
+//        }
+//
+//        if (lowestPriIdx != highestPriIdx && n >= 2) {
+//
+//            resourceScenario = true;
+//
+//            holdsResource[lowestPriIdx] = true;
+//            needsResource[highestPriIdx] = true;
+//
+//            sharedResource.setHolder(processesPQ.get(lowestPriIdx));
 
-        int lowestPriIdx = -1;
-        int highestPriIdx = -1;
-
-        int lowestPriVal = Integer.MIN_VALUE;
-        int highestPriVal = Integer.MAX_VALUE;
-
-        for (int i = 0; i < n; i++) {
-
-            int pri = processesPQ.get(i).getPriority();
-
-            if (pri > lowestPriVal) {
-                lowestPriVal = pri;
-                lowestPriIdx = i;
-            }
-
-            if (pri < highestPriVal) {
-                highestPriVal = pri;
-                highestPriIdx = i;
-            }
-        }
-
-        if (lowestPriIdx != highestPriIdx && n >= 2) {
-
-            resourceScenario = true;
-
-            holdsResource[lowestPriIdx] = true;
-            needsResource[highestPriIdx] = true;
-
-            sharedResource.setHolder(processesPQ.get(lowestPriIdx));
-
-            System.out.println(
-                    "[Resource Setup] P"
-                            + processesPQ.get(lowestPriIdx).getPid()
-                            + " holds LockA | P"
-                            + processesPQ.get(highestPriIdx).getPid()
-                            + " needs LockA");
-        }
+//            System.out.println(
+//                    "[Resource Setup] P"
+//                            + processesPQ.get(lowestPriIdx).getPid()
+//                            + " holds LockA | P"
+//                            + processesPQ.get(highestPriIdx).getPid()
+//                            + " needs LockA");
+//        }
 
         int time = 0;
         int completed = 0;
@@ -96,53 +96,53 @@ public class PriorityScheduler {
         while (completed < n) {
 
             // Apply Priority Inheritance
-            if (resourceScenario) {
-
-                for (int i = 0; i < n; i++) {
-
-                    if (!needsResource[i]
-                            || processesPQ.get(i).getArrivalTime() > time) {
-                        continue;
-                    }
-                    Process waiter = processesPQ.get(i);
-
-                    if (sharedResource.isLocked()) {
-
-                        blocked[i] = true;
-
-                        int holderIdx = -1;
-
-                        for (int j = 0; j < n; j++) {
-                            if (holdsResource[j]) {
-                                holderIdx = j;
-                                break;
-                            }
-                        }
-
-                        if (holderIdx == -1) continue;
-
-                        Process holder = processesPQ.get(holderIdx);
-
-                        if (waiter.getPriority() < holder.getPriority()) {
-
-                            System.out.println(
-                                    "[Priority Inheritance] P"
-                                            + holder.getPid()
-                                            + " boosted from "
-                                            + holder.getPriority()
-                                            + " to "
-                                            + waiter.getPriority());
-
-                            holder.setPriority(waiter.getPriority());
-                        }
-                    }
-                }
-            }
+//            if (resourceScenario) {
+//
+//                for (int i = 0; i < n; i++) {
+//
+//                    if (!needsResource[i]
+//                            || processesPQ.get(i).getArrivalTime() > time) {
+//                        continue;
+//                    }
+//                    Process waiter = processesPQ.get(i);
+//
+//                    if (sharedResource.isLocked()) {
+//
+//                        blocked[i] = true;
+//
+//                        int holderIdx = -1;
+//
+//                        for (int j = 0; j < n; j++) {
+//                            if (holdsResource[j]) {
+//                                holderIdx = j;
+//                                break;
+//                            }
+//                        }
+//
+//                        if (holderIdx == -1) continue;
+//
+//                        Process holder = processesPQ.get(holderIdx);
+//
+//                        if (waiter.getPriority() < holder.getPriority()) {
+//
+//                            System.out.println(
+//                                    "[Priority Inheritance] P"
+//                                            + holder.getPid()
+//                                            + " boosted from "
+//                                            + holder.getPriority()
+//                                            + " to "
+//                                            + waiter.getPriority());
+//
+//                            holder.setPriority(waiter.getPriority());
+//                        }
+//                    }
+//                }
+//            }
 
             int bestPriority = Integer.MAX_VALUE;
 
             for (int i = 0; i < n; i++) {
-                if (blocked[i]) continue;
+                //if (blocked[i]) continue;
                 if (processesPQ.get(i).getArrivalTime() <= time && remaining[i] > 0) {
                     if (processesPQ.get(i).getPriority() < bestPriority) {
                         bestPriority = processesPQ.get(i).getPriority();
@@ -152,7 +152,7 @@ public class PriorityScheduler {
 
             ArrayList<Integer> readyList = new ArrayList<>();
             for (int i = 0; i < n; i++) {
-                if (blocked[i]) continue;
+                //if (blocked[i]) continue;
                 if (processesPQ.get(i).getArrivalTime() <= time && remaining[i] > 0 && processesPQ.get(i).getPriority() == bestPriority) {
                     readyList.add(i);
                 }
@@ -166,7 +166,11 @@ public class PriorityScheduler {
             }
 
             int selected = -1;
-            if (lastIdx != -1 && readyList.contains(lastIdx) && qCounter < quantum) {
+            if (lastIdx != -1 &&
+                    readyList.contains(lastIdx) &&
+                    qCounter < quantum &&
+                    processesPQ.get(lastIdx).getPriority() == bestPriority
+            ) {
                 selected = lastIdx;
             } else {
                 int oldest = Integer.MAX_VALUE;
@@ -209,38 +213,38 @@ public class PriorityScheduler {
                 qCounter = 0;
 
                 // Release resource
-                if (resourceScenario && holdsResource[selected]) {
-
-                    System.out.println(
-                            "[Resource Released] P"
-                                    + p.getPid()
-                                    + " released LockA");
-
-                    p.setPriority(originalPriority[selected]);
-
-                    holdsResource[selected] = false;
-
-                    sharedResource.release(originalPriority[selected]);
-
-                    System.out.println(
-                            "[Priority Restored] P"
-                                    + p.getPid()
-                                    + " restored to "
-                                    + originalPriority[selected]);
-
-                    for (int i = 0; i < n; i++) {
-
-                        if (needsResource[i] && blocked[i]) {
-
-                            blocked[i] = false;
-                            needsResource[i] = false;
-
-                            System.out.println(
-                                    "[Unblocked] P"
-                                            + processesPQ.get(i).getPid());
-                        }
-                    }
-                }
+//                if (resourceScenario && holdsResource[selected]) {
+//
+//                    System.out.println(
+//                            "[Resource Released] P"
+//                                    + p.getPid()
+//                                    + " released LockA");
+//
+//                    p.setPriority(originalPriority[selected]);
+//
+//                    holdsResource[selected] = false;
+//
+//                    sharedResource.release(originalPriority[selected]);
+//
+//                    System.out.println(
+//                            "[Priority Restored] P"
+//                                    + p.getPid()
+//                                    + " restored to "
+//                                    + originalPriority[selected]);
+//
+//                    for (int i = 0; i < n; i++) {
+//
+//                        if (needsResource[i] && blocked[i]) {
+//
+//                            blocked[i] = false;
+//                            needsResource[i] = false;
+//
+//                            System.out.println(
+//                                    "[Unblocked] P"
+//                                            + processesPQ.get(i).getPid());
+//                        }
+//                    }
+//                }
             }
         }
 
