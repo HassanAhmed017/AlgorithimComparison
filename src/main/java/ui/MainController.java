@@ -31,82 +31,69 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     // ── Input Fields ──────────────────────────────────────────
-    @FXML
-    private TextField tfPid, tfArrival,
-            tfBurst, tfPriority, tfQuantum;
+    @FXML private TextField tfPid;
+    @FXML private TextField tfArrival;
+    @FXML private TextField tfBurst;
+    @FXML private TextField tfPriority;
+    @FXML private TextField tfQuantum;
 
     // ── Process Table ─────────────────────────────────────────
-    @FXML
-    private TableView<Process> processTable;
-    @FXML
-    private TableColumn<Process, Integer> colPid,
-            colArrival,
-            colBurst,
-            colPriority;
+    @FXML private TableView<Process>            processTable;
+    @FXML private TableColumn<Process, Integer> colPid;
+    @FXML private TableColumn<Process, Integer> colArrival;
+    @FXML private TableColumn<Process, Integer> colBurst;
+    @FXML private TableColumn<Process, Integer> colPriority;
 
-    // ── Round Robin ───────────────────────────────────────────
-    @FXML
-    private Label rrQueueLabel;
-    @FXML
-    private Pane rrGanttPane;
-    @FXML
-    private ScrollPane rrGanttScroll;
-    @FXML
-    private Label rrAvgLabel;
-    @FXML
-    private TableView<String[]> rrResultTable;
-    @FXML
-    private TableColumn<String[], String> rrColPid,
-            rrColFt,
-            rrColTat,
-            rrColWt,
-            rrColRt;
+    // ── Ready Queue Labels ────────────────────────────────────
+    @FXML private Label rrQueueLabel;
+    @FXML private Label pqQueueLabel;
 
-    // ── Priority ──────────────────────────────────────────────
-    @FXML
-    private Label pqQueueLabel;
-    @FXML
-    private Pane pqGanttPane;
-    @FXML
-    private ScrollPane pqGanttScroll;
-    @FXML
-    private Label pqAvgLabel;
-    @FXML
-    private TableView<String[]> pqResultTable;
-    @FXML
-    private TableColumn<String[], String> pqColPid,
-            pqColFt,
-            pqColTat,
-            pqColWt,
-            pqColRt;
+    // ── Gantt Panes ───────────────────────────────────────────
+    @FXML private Pane       rrGanttPane;
+    @FXML private ScrollPane rrGanttScroll;
+    @FXML private Pane       pqGanttPane;
+    @FXML private ScrollPane pqGanttScroll;
+
+    // ── RR Results Table ──────────────────────────────────────
+    @FXML private TableView<String[]>           rrResultTable;
+    @FXML private TableColumn<String[], String> rrColPid;
+    @FXML private TableColumn<String[], String> rrColFt;
+    @FXML private TableColumn<String[], String> rrColTat;
+    @FXML private TableColumn<String[], String> rrColWt;
+    @FXML private TableColumn<String[], String> rrColRt;
+    @FXML private Label rrAvgLabel;
+
+    // ── Priority Results Table ────────────────────────────────
+    @FXML private TableView<String[]>           pqResultTable;
+    @FXML private TableColumn<String[], String> pqColPid;
+    @FXML private TableColumn<String[], String> pqColFt;
+    @FXML private TableColumn<String[], String> pqColTat;
+    @FXML private TableColumn<String[], String> pqColWt;
+    @FXML private TableColumn<String[], String> pqColRt;
+    @FXML private Label pqAvgLabel;
 
     // ── Comparison Table Labels ───────────────────────────────
-    @FXML
-    private Label rrAvgWtLabel, rrAvgTatLabel,
-            rrAvgRtLabel;
-    @FXML
-    private Label pqAvgWtLabel, pqAvgTatLabel,
-            pqAvgRtLabel;
+    @FXML private Label rrAvgWtLabel;
+    @FXML private Label rrAvgTatLabel;
+    @FXML private Label rrAvgRtLabel;
+    @FXML private Label pqAvgWtLabel;
+    @FXML private Label pqAvgTatLabel;
+    @FXML private Label pqAvgRtLabel;
 
-    // ── Left Result Panel ─────────────────────────────────────
-    @FXML
-    private Label bestAlgoLabel;
-    @FXML
-    private Label scenarioLabel;
-    @FXML
-    private Label starvationLabel;
+    // ── Left Panel ────────────────────────────────────────────
+    @FXML private Label bestAlgoLabel;
+    @FXML private Label scenarioLabel;
 
     // ── Conclusion ────────────────────────────────────────────
-    @FXML
-    private VBox conclusionContent;
-    @FXML
-    private TextArea conclusionText;
+    @FXML private VBox     conclusionContent;
+    @FXML private TextArea conclusionText;
 
     // ── Internal State ────────────────────────────────────────
     private final ObservableList<Process> processList =
             FXCollections.observableArrayList();
 
-    private Timeline rrQueueTimer, pqQueueTimer;
+    private Timeline rrQueueTimer;
+    private Timeline pqQueueTimer;
 
     private static final String[] COLORS = {
             "#5B8DB8", "#6BAA75", "#C0695A", "#C09A5A",
@@ -118,70 +105,44 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // Process input table
-        // NOTE: uses "brustTime" to match Process.java getter
-        colPid.setCellValueFactory(
-                new PropertyValueFactory<>("pid"));
-        colArrival.setCellValueFactory(
-                new PropertyValueFactory<>("arrivalTime"));
-        colBurst.setCellValueFactory(
-                new PropertyValueFactory<>("brustTime"));
-        colPriority.setCellValueFactory(
-                new PropertyValueFactory<>("priority"));
+        colPid.setCellValueFactory(new PropertyValueFactory<>("pid"));
+        colArrival.setCellValueFactory(new PropertyValueFactory<>("arrivalTime"));
+        colBurst.setCellValueFactory(new PropertyValueFactory<>("brustTime"));
+        colPriority.setCellValueFactory(new PropertyValueFactory<>("priority"));
         processTable.setItems(processList);
 
-        // RR result table columns
-        // Array index: 0=PID, 1=FT, 2=TAT, 3=WT, 4=RT
-        rrColPid.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[0]));
-        rrColFt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[1]));
-        rrColTat.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[2]));
-        rrColWt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[3]));
-        rrColRt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[4]));
+        rrColPid.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[0]));
+        rrColFt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[1]));
+        rrColTat.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[2]));
+        rrColWt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[3]));
+        rrColRt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[4]));
 
-        // Priority result table columns
-        // Array index: 0=PID, 1=FT, 2=TAT, 3=WT, 4=RT
-        pqColPid.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[0]));
-        pqColFt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[1]));
-        pqColTat.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[2]));
-        pqColWt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[3]));
-        pqColRt.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue()[4]));
+        pqColPid.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[0]));
+        pqColFt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[1]));
+        pqColTat.setCellValueFactory(d -> new SimpleStringProperty(d.getValue()[2]));
+        pqColWt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[3]));
+        pqColRt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[4]));
     }
 
-    // ── Handle Add Process ────────────────────────────────────
+    // ── handleAddProcess() ────────────────────────────────────
     @FXML
     private void handleAddProcess() {
         try {
-            int pid = Integer.parseInt(
-                    tfPid.getText().trim());
-            int arrival = Integer.parseInt(
-                    tfArrival.getText().trim());
-            int burst = Integer.parseInt(
-                    tfBurst.getText().trim());
-            int priority = Integer.parseInt(
-                    tfPriority.getText().trim());
+            int pid      = Integer.parseInt(tfPid.getText().trim());
+            int arrival  = Integer.parseInt(tfArrival.getText().trim());
+            int burst    = Integer.parseInt(tfBurst.getText().trim());
+            int priority = Integer.parseInt(tfPriority.getText().trim());
 
-            Process p = new Process(
-                    pid, arrival, burst, priority);
-
-
+            Process p = new Process(pid, arrival, burst, priority);
             InputValidator.validateProcess(p, processList);
+            p.setResponseTime(-1);
 
             processList.add(p);
-
             tfPid.clear();
             tfArrival.clear();
             tfBurst.clear();
             tfPriority.clear();
+            tfPid.requestFocus();
 
         } catch (NumberFormatException e) {
             showError("All fields must be valid integers.");
@@ -190,22 +151,24 @@ public class MainController implements Initializable {
         }
     }
 
-    // ── Handle Remove ─────────────────────────────────────────
+    // ── handleRemoveProcess() ─────────────────────────────────
     @FXML
     private void handleRemoveProcess() {
-        Process sel = processTable
-                .getSelectionModel().getSelectedItem();
-        if (sel == null) {
-            showError("Please select a process to remove.");
+        Process selected = processTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showError("Please select a process row to remove.");
             return;
         }
-        processList.remove(sel);
+        processList.remove(selected);
+        Scheduler.removeProcess(selected.getPid());
     }
 
-    // ── Handle Clear ──────────────────────────────────────────
+    // ── handleClear() ─────────────────────────────────────────
     @FXML
     private void handleClear() {
+        stopTimers();
         processList.clear();
+        Scheduler.Clear();
 
         rrGanttPane.getChildren().clear();
         pqGanttPane.getChildren().clear();
@@ -214,33 +177,42 @@ public class MainController implements Initializable {
 
         rrQueueLabel.setText("Queue: [ ]");
         pqQueueLabel.setText("Queue: [ ]");
-        rrAvgLabel.setText(
-                "Avg WT: —  |  Avg TAT: —  |  Avg RT: —");
-        pqAvgLabel.setText(
-                "Avg WT: —  |  Avg TAT: —  |  Avg RT: —");
+        rrAvgLabel.setText("Avg WT: —  |  Avg TAT: —  |  Avg RT: —");
+        pqAvgLabel.setText("Avg WT: —  |  Avg TAT: —  |  Avg RT: —");
 
-        conclusionContent.getChildren().clear();
-        conclusionText.setText(
-                "Run the simulation to generate the conclusion.");
+        String baseStyle =
+                "-fx-text-fill: white;"
+                        + "-fx-background-color: #1C3333;"
+                        + "-fx-border-color: #4A7C7C;"
+                        + "-fx-border-width: 1;"
+                        + "-fx-padding: 6 10 6 10;";
 
-        // Reset all dynamic labels
-        List.of(rrAvgWtLabel, rrAvgTatLabel, rrAvgRtLabel,
-                        pqAvgWtLabel, pqAvgTatLabel, pqAvgRtLabel,
-                        bestAlgoLabel, scenarioLabel, starvationLabel)
-                .forEach(l -> l.setText("—"));
+        for (Label l : List.of(
+                rrAvgWtLabel, rrAvgTatLabel, rrAvgRtLabel,
+                pqAvgWtLabel, pqAvgTatLabel, pqAvgRtLabel)) {
+            l.setText("—");
+            l.setStyle(baseStyle);
+        }
 
-        stopTimers();
+        bestAlgoLabel.setText("—");
+        bestAlgoLabel.setStyle(
+                "-fx-font-size: 13px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: white;");
+        scenarioLabel.setText("—");
+
+        if (conclusionContent != null)
+            conclusionContent.getChildren().clear();
+        conclusionText.setText("Run the simulation to generate the conclusion.");
+        tfQuantum.clear();
     }
 
-    // ── Handle Run ────────────────────────────────────────────
+    // ── handleRun() ───────────────────────────────────────────
     @FXML
     private void handleRun() {
         try {
-            int quantum = Integer.parseInt(
-                    tfQuantum.getText().trim());
+            int quantum = Integer.parseInt(tfQuantum.getText().trim());
             InputValidator.validateQuantum(quantum);
-
-            // Sync processList → Scheduler before running
             Scheduler.quantum = quantum;
             Scheduler.processes = new ArrayList<>(processList);
 
@@ -248,126 +220,155 @@ public class MainController implements Initializable {
 
             SimulationResult result = Scheduler.start();
             if (result == null) {
-                showError(
-                        "Simulation failed. Check your input.");
+                showError("Simulation failed. Check your process list.");
                 return;
             }
-
-            displayRRResults(result.getRrResult());
-            displayPQResults(result.getPqResult());
-            updateComparisonLabels(
-                    result.getRrResult(), result.getPqResult());
-            updateLeftPanel(
-                    result.getRrResult(), result.getPqResult());
-            displayConclusion(
-                    result.getRrResult(), result.getPqResult());
-            startQueueTimers(
-                    result.getRrResult(), result.getPqResult());
+            displayResults(result);
 
         } catch (NumberFormatException e) {
-            showError("Quantum must be a valid integer.");
+            showError("Quantum must be a valid positive integer.");
         } catch (IllegalArgumentException e) {
             showError(e.getMessage());
         }
     }
 
-    // ── Display RR Results ────────────────────────────────────
+    // ── Scenario Handlers ─────────────────────────────────────
+    @FXML
+    private void handleScenarioA() {
+        stopTimers();
+        SimulationResult result = Scheduler.loadScenarioA();
+        if (result == null) { showError("Scenario A failed to load."); return; }
+        syncProcessListFromScheduler();
+        tfQuantum.setText(String.valueOf(Scheduler.quantum));
+        displayResults(result);
+    }
+
+    @FXML
+    private void handleScenarioB() {
+        stopTimers();
+        SimulationResult result = Scheduler.loadScenarioB();
+        if (result == null) { showError("Scenario B failed to load."); return; }
+        syncProcessListFromScheduler();
+        tfQuantum.setText(String.valueOf(Scheduler.quantum));
+        displayResults(result);
+    }
+
+    @FXML
+    private void handleScenarioC() {
+        stopTimers();
+        SimulationResult result = Scheduler.loadScenarioC();
+        if (result == null) { showError("Scenario C failed to load."); return; }
+        syncProcessListFromScheduler();
+        tfQuantum.setText(String.valueOf(Scheduler.quantum));
+        displayResults(result);
+    }
+
+    @FXML
+    private void handleScenarioD() {
+        stopTimers();
+        SimulationResult result = Scheduler.loadScenarioD();
+        if (result == null) { showError("Scenario D failed to load."); return; }
+        syncProcessListFromScheduler();
+        tfQuantum.setText(String.valueOf(Scheduler.quantum));
+        displayResults(result);
+    }
+
+    // ── syncProcessListFromScheduler() ────────────────────────
+    private void syncProcessListFromScheduler() {
+        processList.clear();
+        processList.addAll(Scheduler.processes);
+    }
+
+    // ── displayResults() ──────────────────────────────────────
+    private void displayResults(SimulationResult result) {
+        ScheduleResult rr = result.getRrResult();
+        ScheduleResult pq = result.getPqResult();
+
+        displayRRResults(rr);
+        displayPQResults(pq);
+        updateLeftPanel(rr, pq);
+        updateComparisonLabels(rr, pq);
+        displayConclusion(rr, pq);
+        startQueueTimers(rr, pq);
+    }
+
+    // ── displayRRResults() ────────────────────────────────────
     private void displayRRResults(ScheduleResult result) {
-
-        // RR Gantt blocks already have "P1","P2" format
-        // isRR=true tells drawGanttChart not to add P prefix
-        drawGanttChart(rrGanttPane,
-                result.getGanttBlocks(), true);
-
+        drawGanttChart(rrGanttPane, result.getGanttBlocks());
         fillResultsTable(rrResultTable, result);
-
         rrAvgLabel.setText(String.format(Locale.US,
                 "Avg WT: %.2f  |  Avg TAT: %.2f  |  Avg RT: %.2f",
                 result.getAvgWaitingTime(),
                 result.getAvgTurnaroundTime(),
-                result.getAvgResponseTime()
-        ));
+                computeAvgRelativeRT(result)));
     }
 
-    // ── Display Priority Results ─────
+    // ── displayPQResults() ────────────────────────────────────
     private void displayPQResults(ScheduleResult result) {
-
-        // Priority Gantt blocks have "P1","P2" format
-        drawGanttChart(pqGanttPane,
-                result.getGanttBlocks(), true);
-
+        drawGanttChart(pqGanttPane, result.getGanttBlocks());
         fillResultsTable(pqResultTable, result);
-
         pqAvgLabel.setText(String.format(Locale.US,
                 "Avg WT: %.2f  |  Avg TAT: %.2f  |  Avg RT: %.2f",
                 result.getAvgWaitingTime(),
                 result.getAvgTurnaroundTime(),
-                result.getAvgResponseTime()
-        ));
+                computeAvgRelativeRT(result)));
     }
 
-    private void drawGanttChart(
-            Pane pane,
-            List<GanttBlock> blocks,
-            boolean isRR) {
+    // ── computeAvgRelativeRT() ────────────────────────────────
+    private double computeAvgRelativeRT(ScheduleResult result) {
+        List<Process> ps = result.getProcesses();
+        if (ps == null || ps.isEmpty()) return 0;
+        double sum = 0;
+        for (Process p : ps)
+            sum += (p.getResponseTime() - p.getArrivalTime());
+        return sum / ps.size();
+    }
 
+    // ── drawGanttChart() ──────────────────────────────────────
+    private void drawGanttChart(Pane pane, List<GanttBlock> blocks) {
         pane.getChildren().clear();
         if (blocks == null || blocks.isEmpty()) return;
 
-        double scale = 50.0;
-        double blockH = 50.0;
-        double labelY = blockH + 18;
-        double totalWidth =
-                blocks.get(blocks.size() - 1).getEndTime()
-                        * scale + 60;
+        double scale      = 50.0;
+        double blockH     = 50.0;
+        double labelY     = blockH + 16;
+        double totalWidth = blocks.get(blocks.size() - 1).getEndTime() * scale + 80;
 
-        pane.setPrefSize(totalWidth, blockH + 30);
+        pane.setPrefSize(totalWidth, blockH + 28);
 
         for (GanttBlock block : blocks) {
-            double x = block.getStartTime() * scale;
-            double w = block.getDuration() * scale;
+            double x   = block.getStartTime() * scale;
+            double w   = block.getDuration()  * scale;
+            String pid = block.getPid();
 
-            // Both algos store pid as "P1" or "IDLE"
-            String displayPid = block.getPid();
+            String colorHex = pid.equals("IDLE")
+                    ? "#4A5568"
+                    : COLORS[Math.abs(pid.hashCode()) % COLORS.length];
 
-            String colorHex =
-                    block.getPid().equals("IDLE")
-                            ? "#4A5568"
-                            : COLORS[Math.abs(
-                            block.getPid().hashCode())
-                                     % COLORS.length];
-
-            Rectangle rect = new Rectangle(
-                    x, 0, Math.max(w - 2, 1), blockH);
+            Rectangle rect = new Rectangle(x, 0, Math.max(w - 2, 1), blockH);
             rect.setFill(Color.web(colorHex, 0.9));
             rect.setStroke(Color.web(colorHex));
             rect.setStrokeWidth(1.5);
             rect.setArcWidth(6);
             rect.setArcHeight(6);
 
-            Text pidText = new Text(displayPid);
-            pidText.setFont(Font.font(
-                    "System", FontWeight.BOLD, 12));
+            Text pidText = new Text(pid);
+            pidText.setFont(Font.font("System", FontWeight.BOLD, 12));
             pidText.setFill(Color.WHITE);
-            pidText.setX(
-                    x + w / 2 - displayPid.length() * 4);
-            pidText.setY(blockH / 2 + 5);
+            pidText.setX(x + w / 2.0 - pid.length() * 4.0);
+            pidText.setY(blockH / 2.0 + 5);
 
-            Text startText = new Text(
-                    String.valueOf(block.getStartTime()));
+            Text startText = new Text(String.valueOf(block.getStartTime()));
             startText.setFont(Font.font("Monospace", 10));
             startText.setFill(Color.web("#A8C4C4"));
             startText.setX(x);
             startText.setY(labelY);
 
-            pane.getChildren().addAll(
-                    rect, pidText, startText);
+            pane.getChildren().addAll(rect, pidText, startText);
         }
 
-        GanttBlock last =
-                blocks.get(blocks.size() - 1);
-        Text endText = new Text(
-                String.valueOf(last.getEndTime()));
+        GanttBlock last = blocks.get(blocks.size() - 1);
+        Text endText = new Text(String.valueOf(last.getEndTime()));
         endText.setFont(Font.font("Monospace", 10));
         endText.setFill(Color.web("#A8C4C4"));
         endText.setX(last.getEndTime() * scale);
@@ -375,347 +376,312 @@ public class MainController implements Initializable {
         pane.getChildren().add(endText);
     }
 
-    private void fillResultsTable(
-            TableView<String[]> table,
-            ScheduleResult result) {
-
-        ObservableList<String[]> rows =
-                FXCollections.observableArrayList();
+    // ── fillResultsTable() ────────────────────────────────────
+    private void fillResultsTable(TableView<String[]> table, ScheduleResult result) {
+        ObservableList<String[]> rows = FXCollections.observableArrayList();
 
         for (Process p : result.getProcesses()) {
-            int rt = p.getResponseTime() - p.getArrivalTime();
-
+            int relRT = p.getResponseTime() - p.getArrivalTime();
             rows.add(new String[]{
-                    "P" + p.getPid(),
+                    String.format(Locale.US, "P%d", p.getPid()),
                     String.valueOf(p.getFinishTime()),
                     String.valueOf(p.getTurnaroundTime()),
                     String.valueOf(p.getWaitingTime()),
-                    String.valueOf(rt)
+                    String.valueOf(relRT)
             });
         }
 
-        // Average row at the bottom
         rows.add(new String[]{
-                "AVG",
-                "—",
+                "AVG", "—",
                 fmt(result.getAvgTurnaroundTime()),
                 fmt(result.getAvgWaitingTime()),
-                fmt(result.getAvgResponseTime())
+                fmt(computeAvgRelativeRT(result))
         });
 
         table.setItems(rows);
     }
 
-    // ── Update Comparison Table Labels ───────────────────────
-    private void updateComparisonLabels(
-            ScheduleResult rr, ScheduleResult pq) {
+    // ── updateLeftPanel() ─────────────────────────────────────
+    private void updateLeftPanel(ScheduleResult rr, ScheduleResult pq) {
 
-        rrAvgWtLabel.setText(fmt(rr.getAvgWaitingTime()));
-        rrAvgTatLabel.setText(fmt(rr.getAvgTurnaroundTime()));
-        rrAvgRtLabel.setText(fmt(rr.getAvgResponseTime()));
-        pqAvgWtLabel.setText(fmt(pq.getAvgWaitingTime()));
-        pqAvgTatLabel.setText(fmt(pq.getAvgTurnaroundTime()));
-        pqAvgRtLabel.setText(fmt(pq.getAvgResponseTime()));
+        double rrWT  = rr.getAvgWaitingTime();
+        double pqWT  = pq.getAvgWaitingTime();
+        double rrTAT = rr.getAvgTurnaroundTime();
+        double pqTAT = pq.getAvgTurnaroundTime();
+        double rrRT  = computeAvgRelativeRT(rr);
+        double pqRT  = computeAvgRelativeRT(pq);
 
-        // Highlight better (lower) value in green
-        highlightBetter(rrAvgWtLabel, pqAvgWtLabel,
-                rr.getAvgWaitingTime(),
-                pq.getAvgWaitingTime());
-        highlightBetter(rrAvgTatLabel, pqAvgTatLabel,
-                rr.getAvgTurnaroundTime(),
-                pq.getAvgTurnaroundTime());
-        highlightBetter(rrAvgRtLabel, pqAvgRtLabel,
-                rr.getAvgResponseTime(),
-                pq.getAvgResponseTime());
-    }
+        int rrWins = 0, pqWins = 0;
 
-    // Highlights the label with the lower value in green
-    private void highlightBetter(
-            Label rrLabel, Label pqLabel,
-            double rrVal, double pqVal) {
+        if (rrWT  < pqWT)  rrWins++; else if (pqWT  < rrWT)  pqWins++;
+        if (rrTAT < pqTAT) rrWins++; else if (pqTAT < rrTAT) pqWins++;
+        if (rrRT  < pqRT)  rrWins++; else if (pqRT  < rrRT)  pqWins++;
 
-        String base =
-                "-fx-background-color: #1C3333;"
-                        + "-fx-border-color: #4A7C7C;"
-                        + "-fx-border-width: 1;"
-                        + "-fx-alignment: CENTER;"
-                        + "-fx-padding: 7 10 7 10;";
-
-        String win =
-                "-fx-background-color: #1A3A1A;"
-                        + "-fx-border-color: #4CAF50;"
-                        + "-fx-border-width: 2;"
-                        + "-fx-alignment: CENTER;"
-                        + "-fx-padding: 7 10 7 10;";
-
-        if (rrVal < pqVal) {
-            rrLabel.setStyle(win
-                    + "-fx-text-fill: #4CAF50;"
-                    + "-fx-font-weight: bold;");
-            pqLabel.setStyle(base
-                    + "-fx-text-fill: white;");
-        } else if (pqVal < rrVal) {
-            pqLabel.setStyle(win
-                    + "-fx-text-fill: #4CAF50;"
-                    + "-fx-font-weight: bold;");
-            rrLabel.setStyle(base
-                    + "-fx-text-fill: white;");
-        } else {
-            // Tie
-            rrLabel.setStyle(base
-                    + "-fx-text-fill: #FFD700;");
-            pqLabel.setStyle(base
-                    + "-fx-text-fill: #FFD700;");
-        }
-    }
-
-    // ── Update Left Panel ─────────────────────────────────────
-    private void updateLeftPanel(
-            ScheduleResult rr, ScheduleResult pq) {
-
-        // ── Winner ────────────────────────────────────────────
-        double rrScore = rr.getAvgWaitingTime()
-                + rr.getAvgTurnaroundTime();
-        double pqScore = pq.getAvgWaitingTime()
-                + pq.getAvgTurnaroundTime();
-
-        if (rrScore < pqScore) {
-            bestAlgoLabel.setText("Round Robin ✓");
+        if (rrWins > pqWins) {
+            bestAlgoLabel.setText("Round Robin ");
             bestAlgoLabel.setStyle(
                     "-fx-font-size: 13px;"
                             + "-fx-font-weight: bold;"
                             + "-fx-text-fill: #4CAF50;");
-        } else if (pqScore < rrScore) {
-            bestAlgoLabel.setText("Priority Scheduling ✓");
+        } else if (pqWins > rrWins) {
+            bestAlgoLabel.setText("Priority Scheduling ");
             bestAlgoLabel.setStyle(
                     "-fx-font-size: 13px;"
                             + "-fx-font-weight: bold;"
                             + "-fx-text-fill: #FF6B6B;");
         } else {
-            bestAlgoLabel.setText("Tie");
+            bestAlgoLabel.setText("Tie ");
             bestAlgoLabel.setStyle(
                     "-fx-font-size: 13px;"
                             + "-fx-font-weight: bold;"
                             + "-fx-text-fill: #FFD700;");
         }
+    }
 
-        // ── Scenario Detection ────────────────────────────────
-//        scenarioLabel.setText(
-//                detectScenario(pq));
+    // ── updateComparisonLabels() ──────────────────────────────
+    private void updateComparisonLabels(ScheduleResult rr, ScheduleResult pq) {
+        double rrRT = computeAvgRelativeRT(rr);
+        double pqRT = computeAvgRelativeRT(pq);
 
-        // ── Starvation Detection ──────────────────────────────
-        double maxWt = pq.getProcesses().stream()
-                .mapToInt(Process::getWaitingTime)
-                .max().orElse(0);
-        boolean starvationRisk =
-                maxWt > pq.getAvgWaitingTime() * 2
-                        && pq.getProcesses().size() > 1;
+        rrAvgWtLabel.setText(fmt(rr.getAvgWaitingTime()));
+        rrAvgTatLabel.setText(fmt(rr.getAvgTurnaroundTime()));
+        rrAvgRtLabel.setText(fmt(rrRT));
+        pqAvgWtLabel.setText(fmt(pq.getAvgWaitingTime()));
+        pqAvgTatLabel.setText(fmt(pq.getAvgTurnaroundTime()));
+        pqAvgRtLabel.setText(fmt(pqRT));
 
-        if (starvationRisk) {
-            starvationLabel.setText(
-                    " Risk Detected\nin Priority");
-            starvationLabel.setStyle(
-                    "-fx-font-size: 11px;"
-                            + "-fx-text-fill: #FF6B6B;");
+        highlightBetter(rrAvgWtLabel,  pqAvgWtLabel,  rr.getAvgWaitingTime(),    pq.getAvgWaitingTime());
+        highlightBetter(rrAvgTatLabel, pqAvgTatLabel, rr.getAvgTurnaroundTime(), pq.getAvgTurnaroundTime());
+        highlightBetter(rrAvgRtLabel,  pqAvgRtLabel,  rrRT, pqRT);
+    }
+
+    private void highlightBetter(Label rrLabel, Label pqLabel,
+                                 double rrVal,  double pqVal) {
+        String base =
+                "-fx-background-color: #1C3333;"
+                        + "-fx-border-color: #4A7C7C;"
+                        + "-fx-border-width: 1;"
+                        + "-fx-padding: 6 10 6 10;";
+
+        String win =
+                "-fx-background-color: #1A3A1A;"
+                        + "-fx-border-color: #4CAF50;"
+                        + "-fx-border-width: 2;"
+                        + "-fx-padding: 6 10 6 10;";
+
+        if (rrVal < pqVal) {
+            rrLabel.setStyle(win  + "-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+            pqLabel.setStyle(base + "-fx-text-fill: white;");
+        } else if (pqVal < rrVal) {
+            pqLabel.setStyle(win  + "-fx-text-fill: #4CAF50; -fx-font-weight: bold;");
+            rrLabel.setStyle(base + "-fx-text-fill: white;");
         } else {
-            starvationLabel.setText(
-                    " No Starvation");
-            starvationLabel.setStyle(
-                    "-fx-font-size: 11px;"
-                            + "-fx-text-fill: #4CAF50;");
+            rrLabel.setStyle(base + "-fx-text-fill: #FFD700;");
+            pqLabel.setStyle(base + "-fx-text-fill: #FFD700;");
         }
     }
 
-    // ── Display Conclusion ────────────────────────────────────
-    private void displayConclusion(
-            ScheduleResult rr, ScheduleResult pq) {
+    // ── displayConclusion() ───────────────────────────────────
+    private void displayConclusion(ScheduleResult rr, ScheduleResult pq) {
 
-        conclusionContent.getChildren().clear();
+        if (conclusionContent != null)
+            conclusionContent.getChildren().clear();
 
-        String[][] rows = {
-                {
-                        "Which algorithm gave better avg waiting time?",
-                        rr.getAvgWaitingTime() <= pq.getAvgWaitingTime()
-                                ? "Round Robin  (WT = "
-                                  + fmt(rr.getAvgWaitingTime()) + ")"
-                                : "Priority Scheduling  (WT = "
-                                  + fmt(pq.getAvgWaitingTime()) + ")"
-                },
-                {
-                        "Which algorithm gave better response time?",
-                        rr.getAvgResponseTime()
-                                <= pq.getAvgResponseTime()
-                                ? "Round Robin  (RT = "
-                                  + fmt(rr.getAvgResponseTime()) + ")"
-                                : "Priority Scheduling  (RT = "
-                                  + fmt(pq.getAvgResponseTime()) + ")"
-                },
-                {
-                        "Did higher-priority processes gain advantage?",
-                        "Yes  Priority Scheduling served "
-                                + "high-priority processes first."
-                },
-                {
-                        "Did Round Robin appear more balanced?",
-                        "Yes  Round Robin distributed CPU time "
-                                + "evenly across all processes."
-                },
-                {
-                        "Was starvation observed in Priority?",
-                        "Possible  low-priority processes may "
-                                + "wait significantly longer."
-                },
-                {
-                        "Which algorithm is recommended?",
-                        rr.getAvgWaitingTime() <= pq.getAvgWaitingTime()
-                                ? "Round Robin — better overall waiting "
-                                  + "time and fairness."
-                                : "Priority Scheduling — better for "
-                                  + "urgent task treatment."
-                }
-        };
+        double rrWT  = rr.getAvgWaitingTime();
+        double pqWT  = pq.getAvgWaitingTime();
+        double rrTAT = rr.getAvgTurnaroundTime();
+        double pqTAT = pq.getAvgTurnaroundTime();
+        double rrRT  = computeAvgRelativeRT(rr);
+        double pqRT  = computeAvgRelativeRT(pq);
 
-        for (String[] row : rows)
-            addAnalysisRow(row[0], row[1]);
+        double wtDiff  = Math.abs(rrWT  - pqWT);
+        double tatDiff = Math.abs(rrTAT - pqTAT);
+        double rtDiff  = Math.abs(rrRT  - pqRT);
 
-        conclusionText.setText(String.join("\n\n",
-                "CONCLUSION",
-                rr.getAvgWaitingTime() < pq.getAvgWaitingTime()
-                        ? "Round Robin achieved lower average waiting"
-                          + " time (" + fmt(rr.getAvgWaitingTime())
-                          + ") compared to Priority Scheduling ("
-                          + fmt(pq.getAvgWaitingTime()) + ")."
-                        : "Priority Scheduling achieved lower average"
-                          + " waiting time ("
-                          + fmt(pq.getAvgWaitingTime())
-                          + ") compared to Round Robin ("
-                          + fmt(rr.getAvgWaitingTime()) + ").",
-                "Priority-based service improved urgent-task "
-                        + "treatment by ensuring high-priority processes "
-                        + "received CPU time first.",
-                "Round Robin improved fairness by distributing "
-                        + "CPU time equally across all processes "
-                        + "regardless of priority.",
-                "Starvation risk exists in Priority Scheduling "
-                        + "when low-priority processes are continuously "
-                        + "preempted by arriving high-priority processes.",
-                "Round Robin is recommended for interactive "
-                        + "and time-sharing systems where fairness matters."
-                        + " Priority Scheduling is recommended for systems"
-                        + " where task urgency must be respected."
-        ));
+        String wtWinner  = rrWT  <= pqWT  ? "Round Robin" : "Priority Scheduling";
+        String tatWinner = rrTAT <= pqTAT ? "Round Robin" : "Priority Scheduling";
+        String rtWinner  = rrRT  <= pqRT  ? "Round Robin" : "Priority Scheduling";
+        String wtLoser   = rrWT  <= pqWT  ? "Priority Scheduling" : "Round Robin";
+        String tatLoser  = rrTAT <= pqTAT ? "Priority Scheduling" : "Round Robin";
+
+        // ── Q&A rows ─────────────────────────────────────────
+
+        addAnalysisRow(
+                "Which algorithm had the shorter average waiting time?",
+                wtWinner + " kept processes waiting less on average — "
+                        + fmt(Math.min(rrWT, pqWT)) + " vs "
+                        + fmt(Math.max(rrWT, pqWT)) + " units"
+                        + (wtDiff < 1.0 ? ", though the gap was very small." : ".")
+        );
+
+        addAnalysisRow(
+                "Which algorithm completed processes faster overall?",
+                tatWinner + " achieved a lower average turnaround time ("
+                        + fmt(Math.min(rrTAT, pqTAT)) + " vs "
+                        + fmt(Math.max(rrTAT, pqTAT)) + " units), meaning "
+                        + "processes spent less total time in the system."
+        );
+
+        addAnalysisRow(
+                "Which algorithm responded to processes more quickly?",
+                rtWinner + " gave processes their first CPU slot sooner on average ("
+                        + fmt(Math.min(rrRT, pqRT)) + " vs "
+                        + fmt(Math.max(rrRT, pqRT)) + " units"
+                        + (rtDiff < 1.0 ? ", a negligible difference)." : ").")
+        );
+
+        addAnalysisRow(
+                "Did high-priority processes get a real advantage?",
+                "Yes — Priority Scheduling intentionally serves urgent processes first, "
+                        + "so they finish much sooner than they would under Round Robin's "
+                        + "fixed time-slice approach."
+        );
+
+        addAnalysisRow(
+                "Was Round Robin fair to all processes?",
+                "Yes — every process received CPU time in rotation, regardless of priority. "
+                        + "No process was skipped or delayed because of a lower priority number."
+        );
+
+        addAnalysisRow(
+                "Could any process starve under Priority Scheduling?",
+                "Potentially yes — if high-priority processes keep arriving, a low-priority "
+                        + "process may wait indefinitely. Round Robin avoids this by guaranteeing "
+                        + "every process gets a turn."
+        );
+
+        // ── Written conclusion ────────────────────────────────
+
+        int rrWins = 0, pqWins = 0;
+        if (rrWT  < pqWT)  rrWins++; else if (pqWT  < rrWT)  pqWins++;
+        if (rrTAT < pqTAT) rrWins++; else if (pqTAT < rrTAT) pqWins++;
+        if (rrRT  < pqRT)  rrWins++; else if (pqRT  < rrRT)  pqWins++;
+
+        String overallWinner =
+                rrWins > pqWins ? "Round Robin" :
+                        pqWins > rrWins ? "Priority Scheduling" : null;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("CONCLUSION\n\n");
+
+        if (overallWinner != null) {
+            sb.append(overallWinner)
+                    .append(" came out ahead in this simulation, winning ")
+                    .append(Math.max(rrWins, pqWins))
+                    .append(" out of 3 measured metrics (waiting time, turnaround time, and response time).\n\n");
+        } else {
+            sb.append("Both algorithms performed equally well across the three measured metrics — "
+                    + "this workload does not clearly favor either approach.\n\n");
+        }
+
+        if (wtDiff < 0.5) {
+            sb.append("Waiting time was nearly identical between the two algorithms (")
+                    .append(fmt(rrWT)).append(" for RR vs ")
+                    .append(fmt(pqWT)).append(" for Priority), suggesting this workload does not "
+                            + "strongly benefit from prioritization.\n\n");
+        } else {
+            sb.append(wtWinner).append(" reduced average waiting time by ")
+                    .append(fmt(wtDiff)).append(" units compared to ")
+                    .append(wtLoser).append(".\n\n");
+        }
+
+        if (tatDiff < 0.5) {
+            sb.append("Turnaround time was also very close, meaning both algorithms completed "
+                    + "this set of processes in roughly the same total time.\n\n");
+        } else {
+            sb.append(tatWinner).append(" finished processes ")
+                    .append(fmt(tatDiff))
+                    .append(" units sooner on average — a meaningful improvement in throughput "
+                            + "for this workload.\n\n");
+        }
+
+        sb.append("From a fairness perspective, Round Robin guaranteed every process received "
+                + "CPU time regularly, making it the safer choice when no process should be "
+                + "left waiting indefinitely. Priority Scheduling, while faster for urgent tasks, "
+                + "introduces the risk of starvation for lower-priority processes if the workload "
+                + "is not carefully balanced.\n\n");
+
+        sb.append("In summary: use Round Robin for interactive or time-sharing systems where "
+                + "fairness matters most. Use Priority Scheduling for batch or real-time systems "
+                + "where certain tasks genuinely need to finish first.");
+
+        conclusionText.setText(sb.toString());
     }
 
-    // ── Add One Analysis Row ──────────────────────────────────
-    private void addAnalysisRow(
-            String question, String answer) {
-
+    // ── addAnalysisRow() ──────────────────────────────────────
+    private void addAnalysisRow(String question, String answer) {
         VBox row = new VBox(4);
         row.setStyle(
                 "-fx-background-color: #1C3333;"
                         + "-fx-border-color: #4A7C7C;"
                         + "-fx-border-radius: 4;"
-                        + "-fx-background-radius: 4;"
-        );
+                        + "-fx-background-radius: 4;");
         row.setPadding(new Insets(8));
 
         Label q = new Label("Q: " + question);
-        q.setStyle(
-                "-fx-text-fill: #FFD700;"
-                        + "-fx-font-size: 12;");
+        q.setStyle("-fx-text-fill: #FFD700; -fx-font-size: 12;");
         q.setWrapText(true);
 
         Label a = new Label("A: " + answer);
-        a.setStyle(
-                "-fx-text-fill: white;"
-                        + "-fx-font-size: 12;"
-                        + "-fx-font-weight: bold;");
+        a.setStyle("-fx-text-fill: white; -fx-font-size: 12; -fx-font-weight: bold;");
         a.setWrapText(true);
 
         row.getChildren().addAll(q, a);
         conclusionContent.getChildren().add(row);
     }
 
-    // ── Start Queue Timers ────────────────────────────────────
-    private void startQueueTimers(
-            ScheduleResult rr, ScheduleResult pq) {
+    // ── startQueueTimers() ────────────────────────────────────
+    private void startQueueTimers(ScheduleResult rr, ScheduleResult pq) {
+        List<String> rrStates = buildQueueSequence(rr.getGanttBlocks());
+        List<String> pqStates = buildQueueSequence(pq.getGanttBlocks());
 
-        List<String> rrQueue =
-                buildQueueSequence(rr.getGanttBlocks());
-        List<String> pqQueue =
-                buildQueueSequence(pq.getGanttBlocks());
+        int[] rrIdx = {0}, pqIdx = {0};
 
-        int[] rrIndex = {0}, pqIndex = {0};
-
-        rrQueueTimer = new Timeline(
-                new KeyFrame(Duration.seconds(1), e -> {
-                    if (rrIndex[0] < rrQueue.size()) {
-                        rrQueueLabel.setText(
-                                "Queue: "
-                                        + rrQueue.get(rrIndex[0]++));
-                    } else {
-                        rrQueueLabel.setText(
-                                "Queue: [ ]  — complete");
-                        rrQueueTimer.stop();
-                    }
-                })
-        );
+        rrQueueTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (rrIdx[0] < rrStates.size()) {
+                rrQueueLabel.setText("Queue: " + rrStates.get(rrIdx[0]++));
+            } else {
+                rrQueueLabel.setText("Queue: [ ]  — simulation complete");
+                rrQueueTimer.stop();
+            }
+        }));
         rrQueueTimer.setCycleCount(Timeline.INDEFINITE);
         rrQueueTimer.play();
 
-        pqQueueTimer = new Timeline(
-                new KeyFrame(Duration.seconds(1), e -> {
-                    if (pqIndex[0] < pqQueue.size()) {
-                        pqQueueLabel.setText(
-                                "Queue: "
-                                        + pqQueue.get(pqIndex[0]++));
-                    } else {
-                        pqQueueLabel.setText(
-                                "Queue: [ ]  — complete");
-                        pqQueueTimer.stop();
-                    }
-                })
-        );
+        pqQueueTimer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (pqIdx[0] < pqStates.size()) {
+                pqQueueLabel.setText("Queue: " + pqStates.get(pqIdx[0]++));
+            } else {
+                pqQueueLabel.setText("Queue: [ ]  — simulation complete");
+                pqQueueTimer.stop();
+            }
+        }));
         pqQueueTimer.setCycleCount(Timeline.INDEFINITE);
         pqQueueTimer.play();
     }
 
-    // ── Build Queue Sequence ──────────────────────────────────
-    // Both algorithms store PIDs as "P1","P2" already
-    private List<String> buildQueueSequence(
-            List<GanttBlock> blocks) {
-
-        List<String> sequence = new ArrayList<>();
-
+    private List<String> buildQueueSequence(List<GanttBlock> blocks) {
+        List<String> states = new ArrayList<>();
         for (int i = 0; i < blocks.size(); i++) {
-            GanttBlock current = blocks.get(i);
+            GanttBlock cur = blocks.get(i);
             StringBuilder sb = new StringBuilder();
-
-            sb.append("[ Running: ")
-                    .append(current.getPid())
-                    .append(" (t=")
-                    .append(current.getStartTime())
-                    .append("→")
-                    .append(current.getEndTime())
-                    .append(")");
+            sb.append("[ Running: ").append(cur.getPid())
+                    .append("  t=").append(cur.getStartTime())
+                    .append("→").append(cur.getEndTime());
 
             if (i + 1 < blocks.size()) {
                 sb.append("  |  Waiting: ");
-                int limit =
-                        Math.min(i + 4, blocks.size());
+                int limit = Math.min(i + 4, blocks.size());
                 for (int j = i + 1; j < limit; j++) {
                     sb.append(blocks.get(j).getPid());
                     if (j < limit - 1) sb.append(", ");
                 }
-                if (limit < blocks.size())
-                    sb.append(", ...");
+                if (limit < blocks.size()) sb.append(", ...");
             }
-
             sb.append(" ]");
-            sequence.add(sb.toString());
+            states.add(sb.toString());
         }
-
-        return sequence;
+        return states;
     }
 
     // ── Helpers ───────────────────────────────────────────────

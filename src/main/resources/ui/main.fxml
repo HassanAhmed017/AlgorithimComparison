@@ -7,130 +7,139 @@
 
 <BorderPane style="-fx-background-color: #2F4F4F;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MainController">
 
-
+    <!-- TOP: Header -->
     <top>
         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: #1C3333;                    -fx-border-color: #4A7C7C;                    -fx-border-width: 0 0 2 0;                    -fx-padding: 12 20 12 20;">
-            <Label style="-fx-font-size: 18px;                        -fx-font-weight: bold;" text="⚙  CPU Scheduling Simulator" textFill="WHITE" />
-            <Label style="-fx-font-size: 13px;" text="—  Round Robin  vs  Priority Scheduling" textFill="#A8C4C4" />
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="⚙  CPU Scheduling Simulator" textFill="WHITE" />
+            <Label style="-fx-font-size: 13px;" text="  Round Robin  vs  Priority Scheduling" textFill="#A8C4C4" />
         </HBox>
     </top>
 
-
+    <!-- LEFT: Input + Scenarios + Result Panel -->
     <left>
-        <VBox prefWidth="215" spacing="10" style="-fx-padding: 12;                    -fx-background-color: #1C3333;                    -fx-border-color: #4A7C7C;                    -fx-border-width: 0 2 0 0;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #1C3333;                    -fx-background-color: #1C3333;" vbarPolicy="AS_NEEDED">
+            <content>
+                <VBox prefWidth="210" spacing="10" style="-fx-padding: 12;                            -fx-background-color: #1C3333;                            -fx-border-color: #4A7C7C;                            -fx-border-width: 0 2 0 0;">
 
-            <Label text="INPUT SECTION" textFill="#A8C4C4">
-                <font><Font name="System Bold" size="12.0" /></font>
-            </Label>
+                    <!-- INPUT SECTION -->
+                    <Label text="INPUT SECTION" textFill="#A8C4C4">
+                        <font><Font name="System Bold" size="12.0" /></font>
+                    </Label>
 
-            <TextField fx:id="tfPid" promptText="Process ID  e.g. 1" style="-fx-background-color: #2F4F4F;                        -fx-text-fill: white;                        -fx-prompt-text-fill: #708090;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-padding: 6;" />
+                    <TextField fx:id="tfPid" promptText="Process ID  e.g. 1" style="-fx-background-color: #2F4F4F;                                -fx-text-fill: white;                                -fx-prompt-text-fill: #708090;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-padding: 6;" />
 
-            <TextField fx:id="tfArrival" promptText="Arrival Time" style="-fx-background-color: #2F4F4F;                        -fx-text-fill: white;                        -fx-prompt-text-fill: #708090;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-padding: 6;" />
+                    <TextField fx:id="tfArrival" promptText="Arrival Time" style="-fx-background-color: #2F4F4F;                                -fx-text-fill: white;                                -fx-prompt-text-fill: #708090;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-padding: 6;" />
 
-            <TextField fx:id="tfBurst" promptText="Burst Time" style="-fx-background-color: #2F4F4F;                        -fx-text-fill: white;                        -fx-prompt-text-fill: #708090;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-padding: 6;" />
+                    <TextField fx:id="tfBurst" promptText="Burst Time" style="-fx-background-color: #2F4F4F;                                -fx-text-fill: white;                                -fx-prompt-text-fill: #708090;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-padding: 6;" />
 
-            <TextField fx:id="tfPriority" promptText="Priority (1=highest)" style="-fx-background-color: #2F4F4F;                        -fx-text-fill: white;                        -fx-prompt-text-fill: #708090;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-padding: 6;" />
+                    <TextField fx:id="tfPriority" promptText="Priority  (1=highest)" style="-fx-background-color: #2F4F4F;                                -fx-text-fill: white;                                -fx-prompt-text-fill: #708090;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-padding: 6;" />
 
-            <HBox spacing="8">
-                <Button onAction="#handleAddProcess" prefHeight="28" prefWidth="90" style="-fx-background-color: #3A6B6B;                            -fx-text-fill: white;                            -fx-border-color: #4A7C7C;                            -fx-border-radius: 4;                            -fx-background-radius: 4;                            -fx-cursor: hand;" text="＋ Add" />
-                <Button onAction="#handleRemoveProcess" prefHeight="28" prefWidth="90" style="-fx-background-color: #6B2737;                            -fx-text-fill: white;                            -fx-border-color: #8B3A4A;                            -fx-border-radius: 4;                            -fx-background-radius: 4;                            -fx-cursor: hand;" text="✕ Delete" />
-            </HBox>
+                    <HBox spacing="8">
+                        <Button onAction="#handleAddProcess" prefHeight="28" prefWidth="88" style="-fx-background-color: #3A6B6B;                                    -fx-text-fill: white;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;                                    -fx-background-radius: 4;                                    -fx-cursor: hand;" text="＋ Add" />
+                        <Button onAction="#handleRemoveProcess" prefHeight="28" prefWidth="88" style="-fx-background-color: #6B2737;                                    -fx-text-fill: white;                                    -fx-border-color: #8B3A4A;                                    -fx-border-radius: 4;                                    -fx-background-radius: 4;                                    -fx-cursor: hand;" text="✕ Delete" />
+                    </HBox>
 
-            <Button maxWidth="Infinity" onAction="#handleClear" prefHeight="28" style="-fx-background-color: #556B2F;                        -fx-text-fill: white;                        -fx-border-color: #6B8B3A;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-cursor: hand;" text="⟳  Clear All" />
+                    <Button alignment="CENTER" onAction="#handleClear" prefHeight="28" prefWidth="88" style="-fx-background-color: #556B2F;                                -fx-text-fill: white;                                -fx-border-color: #6B8B3A;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;" text="⟳ Clear">
+                        <VBox.margin><Insets left="58" /></VBox.margin>
+                    </Button>
 
-            <Separator style="-fx-background-color: #4A7C7C;" />
+                    <Separator style="-fx-background-color: #4A7C7C;" />
 
-            <TextField fx:id="tfQuantum" promptText="Time Quantum" style="-fx-background-color: #2F4F4F;                        -fx-text-fill: white;                        -fx-prompt-text-fill: #708090;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-padding: 6;" />
+                    <TextField fx:id="tfQuantum" promptText="Time Quantum" style="-fx-background-color: #2F4F4F;                                -fx-text-fill: white;                                -fx-prompt-text-fill: #708090;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-padding: 6;" />
 
-            <Button maxWidth="Infinity" onAction="#handleRun" style="-fx-background-color: #4A7C4A;                        -fx-text-fill: white;                        -fx-border-radius: 4;                        -fx-background-radius: 4;                        -fx-cursor: hand;                        -fx-padding: 8;" text="▶  Run Simulation">
-                <font><Font name="System Bold" size="12.0" /></font>
-            </Button>
+                    <Button maxWidth="Infinity" onAction="#handleRun" style="-fx-background-color: #4A7C4A;                                -fx-text-fill: white;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;                                -fx-padding: 8;" text="▶  Run Simulation">
+                        <font><Font name="System Bold" size="12.0" /></font>
+                    </Button>
 
-            <Separator style="-fx-background-color: #4A7C7C;" />
+                    <Separator style="-fx-background-color: #4A7C7C;" />
 
-            <!-- Result Panel -->
-            <Label text="RESULT" textFill="#A8C4C4">
-                <font><Font name="System Bold" size="12.0" /></font>
-            </Label>
+                    <!-- TEST SCENARIOS SECTION -->
+                    <Label text="TEST SCENARIOS" textFill="#A8C4C4">
+                        <font><Font name="System Bold" size="12.0" /></font>
+                    </Label>
 
-            <VBox spacing="8" style="-fx-background-color: #243F3F;                        -fx-border-color: #4A7C7C;                        -fx-border-radius: 6;                        -fx-background-radius: 6;                        -fx-padding: 10;">
+                    <Label style="-fx-font-size: 10px;" text="Click to load a preset scenario and run simulation automatically" textFill="#708090" wrapText="true" />
 
-                <Label style="-fx-font-size: 11px;                               -fx-font-weight: bold;" text="Winner" textFill="#A8C4C4" />
-                <Label fx:id="bestAlgoLabel" style="-fx-font-size: 13px;                            -fx-font-weight: bold;" text="—" textFill="WHITE" wrapText="true" />
+                    <Button maxWidth="Infinity" onAction="#handleScenarioA" style="-fx-background-color: #2C4A6B;                                -fx-text-fill: white;                                -fx-border-color: #4A7C9C;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;                                -fx-padding: 7;                                -fx-font-size: 11px;" text="Scenario A — Basic Mixed" wrapText="true" />
 
-                <Separator style="-fx-background-color: #4A7C7C;" />
+                    <Button maxWidth="Infinity" onAction="#handleScenarioB" style="-fx-background-color: #4A3A1C;                                -fx-text-fill: white;                                -fx-border-color: #8B6A2A;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;                                -fx-padding: 7;                                -fx-font-size: 11px;" text="Scenario B — Urgency Case" wrapText="true" />
 
-                <Label style="-fx-font-size: 11px;                               -fx-font-weight: bold;" text="Starvation Risk" textFill="#A8C4C4" />
-                <Label fx:id="starvationLabel" style="-fx-font-size: 11px;" text="—" textFill="WHITE" wrapText="true" />
-            </VBox>
+                    <Button maxWidth="Infinity" onAction="#handleScenarioC" style="-fx-background-color: #1C4A2C;                                -fx-text-fill: white;                                -fx-border-color: #2A8B4A;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;                                -fx-padding: 7;                                -fx-font-size: 11px;" text="Scenario C — Fairness Case" wrapText="true" />
 
-            <BorderPane.margin>
-                <Insets left="10" right="5" />
-            </BorderPane.margin>
-        </VBox>
+                    <Button maxWidth="Infinity" onAction="#handleScenarioD" style="-fx-background-color: #4A1C1C;                                -fx-text-fill: white;                                -fx-border-color: #8B2A2A;                                -fx-border-radius: 4;                                -fx-background-radius: 4;                                -fx-cursor: hand;                                -fx-padding: 7;                                -fx-font-size: 11px;" text="Scenario D — Starvation Case" wrapText="true" />
+
+                    <Separator style="-fx-background-color: #4A7C7C;" />
+
+                    <!-- RESULT: Winner + Scenario ONLY -->
+                    <Label text="RESULT" textFill="#A8C4C4">
+                        <font><Font name="System Bold" size="12.0" /></font>
+                    </Label>
+
+                    <VBox spacing="8" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-background-radius: 6;                                -fx-padding: 10;">
+
+                        <Label style="-fx-font-size: 11px;                                       -fx-font-weight: bold;" text="Winner" textFill="#A8C4C4" />
+                        <Label fx:id="bestAlgoLabel" style="-fx-font-size: 13px;                                    -fx-font-weight: bold;" text="—" textFill="WHITE" wrapText="true" />
+                    </VBox>
+
+                    <BorderPane.margin>
+                        <Insets left="10" right="5" />
+                    </BorderPane.margin>
+                </VBox>
+            </content>
+        </ScrollPane>
     </left>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- CENTER: All Results                       -->
-    <!-- ══════════════════════════════════════════ -->
+    <!-- CENTER: All Results -->
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background: #2F4F4F;                    -fx-background-color: transparent;" vbarPolicy="AS_NEEDED">
             <content>
                 <VBox spacing="14" style="-fx-padding: 14;">
 
-                    <!-- Process Table -->
+                    <!-- PROCESS TABLE -->
                     <Label text="PROCESS TABLE" textFill="WHITE">
-                        <font>
-                            <Font name="System Bold" size="13.0" />
-                        </font>
+                        <font><Font name="System Bold" size="13.0" /></font>
                     </Label>
 
-                    <TableView fx:id="processTable" maxWidth="680" prefHeight="150" style="-fx-background-color: white;                                -fx-table-cell-border-color: black;                                -fx-border-color: black;                                -fx-border-width: 1;">
+                    <TableView fx:id="processTable" maxWidth="560" prefHeight="150" style="-fx-background-color: white;                                -fx-table-cell-border-color: black;                                -fx-border-color: black;                                -fx-border-width: 1;">
                         <columns>
-                            <TableColumn fx:id="colPid" prefWidth="80" style="-fx-alignment: CENTER;                                        -fx-font-weight: bold;" text="PID" />
-                            <TableColumn fx:id="colArrival" prefWidth="100" style="-fx-alignment: CENTER;                                        -fx-font-weight: bold;" text="Arrival" />
-                            <TableColumn fx:id="colBurst" prefWidth="100" style="-fx-alignment: CENTER;                                        -fx-font-weight: bold;" text="Burst" />
-                            <TableColumn fx:id="colPriority" prefWidth="100" style="-fx-alignment: CENTER;                                        -fx-font-weight: bold;" text="Priority" />
+                            <TableColumn fx:id="colPid" prefWidth="100" text="PID" />
+                            <TableColumn fx:id="colArrival" prefWidth="120" text="Arrival" />
+                            <TableColumn fx:id="colBurst" prefWidth="120" text="Burst" />
+                            <TableColumn fx:id="colPriority" prefWidth="120" text="Priority" />
                         </columns>
                     </TableView>
 
-                    <!-- Ready Queues -->
+                    <!-- READY QUEUES -->
                     <VBox spacing="8" style="-fx-background-color: #243F3F;                                -fx-padding: 10;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;">
 
                         <Label text="Ready Queue  —  Round Robin" textFill="#A8C4C4">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
+                            <font><Font name="System Bold" size="12.0" /></font>
                         </Label>
-                        <Label fx:id="rrQueueLabel" style="-fx-background-color: #1C3333;                                    -fx-padding: 8;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;                                    -fx-font-size: 12;" text="Queue: [ ]" textFill="WHITE" />
+                        <Label fx:id="rrQueueLabel" style="-fx-background-color: #1C3333;                                    -fx-padding: 8;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;                                    -fx-font-size: 12;" text="Queue: [ ]" textFill="WHITE" wrapText="true" />
 
                         <Label text="Ready Queue  —  Priority Scheduling" textFill="#A8C4C4">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
+                            <font><Font name="System Bold" size="12.0" /></font>
                         </Label>
-                        <Label fx:id="pqQueueLabel" style="-fx-background-color: #1C3333;                                    -fx-padding: 8;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;                                    -fx-font-size: 12;" text="Queue: [ ]" textFill="WHITE" />
+                        <Label fx:id="pqQueueLabel" style="-fx-background-color: #1C3333;                                    -fx-padding: 8;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 4;                                    -fx-font-size: 12;" text="Queue: [ ]" textFill="WHITE" wrapText="true" />
                     </VBox>
 
-                    <!-- Gantt + Results Side by Side -->
-                    <HBox spacing="14">
+                    <!-- GANTT + RESULTS SIDE BY SIDE -->
+                    <HBox spacing="16">
 
-                        <!-- Round Robin Column -->
-                        <VBox prefWidth="430" spacing="10" style="-fx-background-color: #243F3F;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 6;                                    -fx-padding: 12;">
+                        <!-- ROUND ROBIN Column -->
+                        <VBox spacing="10" style="-fx-background-color: #243F3F;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 6;                                    -fx-padding: 12;" HBox.hgrow="ALWAYS">
 
                             <Label text="① ROUND ROBIN" textFill="WHITE">
-                                <font>
-                                    <Font name="System Bold" size="13.0" />
-                                </font>
+                                <font><Font name="System Bold" size="13.0" /></font>
                             </Label>
 
                             <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Gantt Chart" textFill="#FFD700" />
 
-                            <ScrollPane fx:id="rrGanttScroll" fitToHeight="true" prefHeight="95" style="-fx-background-color: #1C3333;                                        -fx-background: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;">
+                            <ScrollPane fx:id="rrGanttScroll" fitToHeight="false" hbarPolicy="AS_NEEDED" prefHeight="95" style="-fx-background-color: #1C3333;                                        -fx-background: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" vbarPolicy="NEVER">
                                 <content>
                                     <Pane fx:id="rrGanttPane" prefHeight="75" style="-fx-background-color: #1C3333;">
                                         <padding>
-                                            <Insets bottom="8" left="8" right="8" top="8" />
+                                            <Insets bottom="6" left="8" right="8" top="6" />
                                         </padding>
                                     </Pane>
                                 </content>
@@ -138,35 +147,33 @@
 
                             <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Results Table" textFill="#FFD700" />
 
-                            <TableView fx:id="rrResultTable" prefHeight="210" style="-fx-background-color: white;                                        -fx-table-cell-border-color: black;                                        -fx-border-color: black;                                        -fx-border-width: 1;">
+                            <TableView fx:id="rrResultTable" maxWidth="Infinity" prefHeight="200" style="-fx-background-color: white;                                        -fx-table-cell-border-color: black;                                        -fx-border-color: black;                                        -fx-border-width: 1;">
                                 <columns>
-                                    <TableColumn fx:id="rrColPid" prefWidth="65" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="PID" />
-                                    <TableColumn fx:id="rrColFt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="FT" />
-                                    <TableColumn fx:id="rrColTat" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="TAT" />
-                                    <TableColumn fx:id="rrColWt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="WT" />
-                                    <TableColumn fx:id="rrColRt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="RT" />
+                                    <TableColumn fx:id="rrColPid" prefWidth="70" text="PID" />
+                                    <TableColumn fx:id="rrColFt" prefWidth="65" text="FT" />
+                                    <TableColumn fx:id="rrColTat" prefWidth="65" text="TAT" />
+                                    <TableColumn fx:id="rrColWt" prefWidth="65" text="WT" />
+                                    <TableColumn fx:id="rrColRt" prefWidth="65" text="RT" />
                                 </columns>
                             </TableView>
 
-                            <Label fx:id="rrAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" />
+                            <Label fx:id="rrAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" wrapText="true" />
                         </VBox>
 
-                        <!-- Priority Column -->
-                        <VBox prefWidth="430" spacing="10" style="-fx-background-color: #243F3F;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 6;                                    -fx-padding: 12;">
+                        <!-- PRIORITY Column -->
+                        <VBox spacing="10" style="-fx-background-color: #243F3F;                                    -fx-border-color: #4A7C7C;                                    -fx-border-radius: 6;                                    -fx-padding: 12;" HBox.hgrow="ALWAYS">
 
                             <Label text="② PRIORITY SCHEDULING" textFill="WHITE">
-                                <font>
-                                    <Font name="System Bold" size="13.0" />
-                                </font>
+                                <font><Font name="System Bold" size="13.0" /></font>
                             </Label>
 
                             <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Gantt Chart" textFill="#FFD700" />
 
-                            <ScrollPane fx:id="pqGanttScroll" fitToHeight="true" prefHeight="95" style="-fx-background-color: #1C3333;                                        -fx-background: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;">
+                            <ScrollPane fx:id="pqGanttScroll" fitToHeight="false" hbarPolicy="AS_NEEDED" prefHeight="95" style="-fx-background-color: #1C3333;                                        -fx-background: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" vbarPolicy="NEVER">
                                 <content>
                                     <Pane fx:id="pqGanttPane" prefHeight="75" style="-fx-background-color: #1C3333;">
                                         <padding>
-                                            <Insets bottom="8" left="8" right="8" top="8" />
+                                            <Insets bottom="6" left="8" right="8" top="6" />
                                         </padding>
                                     </Pane>
                                 </content>
@@ -174,86 +181,82 @@
 
                             <Label style="-fx-font-size: 11px;                                           -fx-font-weight: bold;" text="Results Table" textFill="#FFD700" />
 
-                            <TableView fx:id="pqResultTable" prefHeight="210" style="-fx-background-color: white;                                        -fx-table-cell-border-color: black;                                        -fx-border-color: black;                                        -fx-border-width: 1;">
+                            <TableView fx:id="pqResultTable" maxWidth="Infinity" prefHeight="200" style="-fx-background-color: white;                                        -fx-table-cell-border-color: black;                                        -fx-border-color: black;                                        -fx-border-width: 1;">
                                 <columns>
-                                    <TableColumn fx:id="pqColPid" prefWidth="65" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="PID" />
-                                    <TableColumn fx:id="pqColFt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="FT" />
-                                    <TableColumn fx:id="pqColTat" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="TAT" />
-                                    <TableColumn fx:id="pqColWt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="WT" />
-                                    <TableColumn fx:id="pqColRt" prefWidth="60" style="-fx-alignment: CENTER;                                                -fx-font-weight: bold;" text="RT" />
+                                    <TableColumn fx:id="pqColPid" prefWidth="70" text="PID" />
+                                    <TableColumn fx:id="pqColFt" prefWidth="65" text="FT" />
+                                    <TableColumn fx:id="pqColTat" prefWidth="65" text="TAT" />
+                                    <TableColumn fx:id="pqColWt" prefWidth="65" text="WT" />
+                                    <TableColumn fx:id="pqColRt" prefWidth="65" text="RT" />
                                 </columns>
                             </TableView>
 
-                            <Label fx:id="pqAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" />
+                            <Label fx:id="pqAvgLabel" style="-fx-font-size: 11;                                        -fx-padding: 6;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-radius: 4;" text="Avg WT: —  |  Avg TAT: —  |  Avg RT: —" textFill="#FFD700" wrapText="true" />
                         </VBox>
                     </HBox>
 
-                    <!-- Comparison Summary -->
-                    <VBox spacing="2" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-padding: 12;">
+                    <!-- COMPARISON SUMMARY -->
+                    <VBox spacing="10" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-padding: 12;">
 
-                        <Label style="-fx-font-size: 13px;                                       -fx-font-weight: bold;" text="③ COMPARISON SUMMARY" textFill="WHITE">
+                        <Label text="③ COMPARISON SUMMARY" textFill="WHITE">
+                            <font><Font name="System Bold" size="13.0" /></font>
                         </Label>
 
-                        <VBox spacing="0" style="-fx-padding: 8 0 0 0;">
+                        <!-- Header Row -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: black;                                        -fx-font-weight: bold;                                        -fx-background-color: #B0C4C4;                                        -fx-border-color: black;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Metric" />
+                            <Label prefWidth="160" style="-fx-text-fill: black;                                        -fx-font-weight: bold;                                        -fx-background-color: #B0C4C4;                                        -fx-border-color: black;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Round Robin" />
+                            <Label prefWidth="160" style="-fx-text-fill: black;                                        -fx-font-weight: bold;                                        -fx-background-color: #B0C4C4;                                        -fx-border-color: black;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Priority" />
+                        </HBox>
 
-                            <!-- Header Row -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Metric" />
-                                <Label prefWidth="160" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Round Robin" />
-                                <Label prefWidth="160" style="-fx-text-fill: black;                                            -fx-font-weight: bold;                                            -fx-background-color: #8FBC8F;                                            -fx-border-color: black;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Priority" />
-                            </HBox>
+                        <!-- Avg Waiting Time -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Avg Waiting Time" />
+                            <Label fx:id="rrAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                            <Label fx:id="pqAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                        </HBox>
 
-                            <!-- Avg Waiting Time -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Waiting Time" />
-                                <Label fx:id="rrAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                                <Label fx:id="pqAvgWtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                            </HBox>
+                        <!-- Avg Turnaround Time -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Avg Turnaround Time" />
+                            <Label fx:id="rrAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                            <Label fx:id="pqAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                        </HBox>
 
-                            <!-- Avg Turnaround Time -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Turnaround Time" />
-                                <Label fx:id="rrAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                                <Label fx:id="pqAvgTatLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                            </HBox>
+                        <!-- Avg Response Time -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Avg Response Time" />
+                            <Label fx:id="rrAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                            <Label fx:id="pqAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="—" />
+                        </HBox>
 
-                            <!-- Avg Response Time -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Avg Response Time" />
-                                <Label fx:id="rrAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                                <Label fx:id="pqAvgRtLabel" prefWidth="160" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="—" />
-                            </HBox>
+                        <!-- Starvation Risk (static) -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Starvation Risk" />
+                            <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                        -fx-font-weight: bold;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="None ✓" />
+                            <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                        -fx-font-weight: bold;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Possible ⚠" />
+                        </HBox>
 
-                            <!-- Starvation Risk -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Starvation Risk" />
-                                <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                            -fx-font-weight: bold;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="None ✓" />
-                                <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                            -fx-font-weight: bold;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Possible ⚠" />
-                            </HBox>
+                        <!-- Fairness (static) -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Fairness" />
+                            <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                        -fx-font-weight: bold;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="High ✓" />
+                            <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                        -fx-font-weight: bold;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Low ✗" />
+                        </HBox>
 
-                            <!-- Fairness -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Fairness" />
-                                <Label prefWidth="160" style="-fx-text-fill: #4CAF50;                                            -fx-font-weight: bold;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="High ✓" />
-                                <Label prefWidth="160" style="-fx-text-fill: #FF6B6B;                                            -fx-font-weight: bold;                                            -fx-background-color: #1C3333;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Low ✗" />
-                            </HBox>
-
-                            <!-- Best For -->
-                            <HBox>
-                                <Label prefWidth="200" style="-fx-text-fill: white;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-padding: 7 10 7 10;" text="Best For" />
-                                <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Interactive Systems" />
-                                <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                            -fx-background-color: #243F3F;                                            -fx-border-color: #4A7C7C;                                            -fx-border-width: 1;                                            -fx-alignment: CENTER;                                            -fx-padding: 7 10 7 10;" text="Batch / Priority Jobs" />
-                            </HBox>
-                        </VBox>
+                        <!-- Best For (static) -->
+                        <HBox spacing="2">
+                            <Label prefWidth="200" style="-fx-text-fill: white;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Best For" />
+                            <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Interactive Systems" />
+                            <Label prefWidth="160" style="-fx-text-fill: #A8C4C4;                                        -fx-background-color: #1C3333;                                        -fx-border-color: #4A7C7C;                                        -fx-border-width: 1;                                        -fx-padding: 6 10 6 10;" text="Batch / Priority Jobs" />
+                        </HBox>
                     </VBox>
 
-                    <!-- Conclusion Section -->
+                    <!-- FINAL CONCLUSION -->
                     <VBox spacing="10" style="-fx-background-color: #243F3F;                                -fx-border-color: #4A7C7C;                                -fx-border-radius: 6;                                -fx-padding: 12;">
 
                         <Label text="④ FINAL CONCLUSION" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="13.0" />
-                            </font>
+                            <font><Font name="System Bold" size="13.0" /></font>
                         </Label>
 
                         <VBox fx:id="conclusionContent" spacing="8" />
