@@ -43,9 +43,6 @@ public class Scheduler {
         int processPriority = in.nextInt();
 
         Process newP = new Process(processID, processArivalTime, processburstTime, processPriority);
-
-        // I remove if condition to wrap validateProcessList(processes) in 'try catch' to handle it in case of exception
-
         try {
 
             validateProcess(newP, processes);
@@ -59,8 +56,6 @@ public class Scheduler {
 
             System.out.println("Validation Error: " + e.getMessage());
         }
-
-
     }
 
 
@@ -85,31 +80,23 @@ public class Scheduler {
     }
 
 
-    /// static SimulationResult start()
     public static SimulationResult start() {
         Process[] p_array = processes.toArray(new Process[processes.size()]);
         Arrays.sort(p_array, Comparator.comparingInt(p -> p.getArrivalTime()));
         processes = new ArrayList<>(Arrays.asList(p_array));
-        // I remove if condition to wrap validateProcessList(processes) in 'try catch' to handle it in case of exception
-        try {
 
-            validateProcessList(processes);
+        validateProcessList(processes);
 
-            ArrayList<Process> processesRR = deepCopy(processes);
-            ArrayList<Process> processesPQ = deepCopy(processes);
+        ArrayList<Process> processesRR = deepCopy(processes);
+        ArrayList<Process> processesPQ = deepCopy(processes);
 
-            RoundRobin rr = new RoundRobin();
-            ScheduleResult rrResult = rr.startRR(quantum, processesRR);
+        RoundRobin rr = new RoundRobin();
+        ScheduleResult rrResult = rr.startRR(quantum, processesRR);
 
-            PriorityScheduler pq = new PriorityScheduler();
-            ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
+        PriorityScheduler pq = new PriorityScheduler();
+        ScheduleResult pqResult = pq.schedule(processesPQ, quantum);
 
-            return new SimulationResult(rrResult, pqResult);
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        }
-        return null;
+        return new SimulationResult(rrResult, pqResult);
     }
 
 

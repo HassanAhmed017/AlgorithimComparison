@@ -30,31 +30,29 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    // ── Input Fields ──────────────────────────────────────────
     @FXML private TextField tfPid;
     @FXML private TextField tfArrival;
     @FXML private TextField tfBurst;
     @FXML private TextField tfPriority;
     @FXML private TextField tfQuantum;
 
-    // ── Process Table ─────────────────────────────────────────
+
     @FXML private TableView<Process>            processTable;
     @FXML private TableColumn<Process, Integer> colPid;
     @FXML private TableColumn<Process, Integer> colArrival;
     @FXML private TableColumn<Process, Integer> colBurst;
     @FXML private TableColumn<Process, Integer> colPriority;
 
-    // ── Ready Queue Labels ────────────────────────────────────
+
     @FXML private Label rrQueueLabel;
     @FXML private Label pqQueueLabel;
 
-    // ── Gantt Panes ───────────────────────────────────────────
+
     @FXML private Pane       rrGanttPane;
     @FXML private ScrollPane rrGanttScroll;
     @FXML private Pane       pqGanttPane;
     @FXML private ScrollPane pqGanttScroll;
 
-    // ── RR Results Table ──────────────────────────────────────
     @FXML private TableView<String[]>           rrResultTable;
     @FXML private TableColumn<String[], String> rrColPid;
     @FXML private TableColumn<String[], String> rrColFt;
@@ -63,7 +61,7 @@ public class MainController implements Initializable {
     @FXML private TableColumn<String[], String> rrColRt;
     @FXML private Label rrAvgLabel;
 
-    // ── Priority Results Table ────────────────────────────────
+
     @FXML private TableView<String[]>           pqResultTable;
     @FXML private TableColumn<String[], String> pqColPid;
     @FXML private TableColumn<String[], String> pqColFt;
@@ -72,7 +70,7 @@ public class MainController implements Initializable {
     @FXML private TableColumn<String[], String> pqColRt;
     @FXML private Label pqAvgLabel;
 
-    // ── Comparison Table Labels ───────────────────────────────
+
     @FXML private Label rrAvgWtLabel;
     @FXML private Label rrAvgTatLabel;
     @FXML private Label rrAvgRtLabel;
@@ -80,15 +78,15 @@ public class MainController implements Initializable {
     @FXML private Label pqAvgTatLabel;
     @FXML private Label pqAvgRtLabel;
 
-    // ── Left Panel ────────────────────────────────────────────
+
     @FXML private Label bestAlgoLabel;
     @FXML private Label scenarioLabel;
 
-    // ── Conclusion ────────────────────────────────────────────
+
     @FXML private VBox     conclusionContent;
     @FXML private TextArea conclusionText;
 
-    // ── Internal State ────────────────────────────────────────
+
     private final ObservableList<Process> processList =
             FXCollections.observableArrayList();
 
@@ -101,7 +99,7 @@ public class MainController implements Initializable {
             "#AA9B5A", "#8BAA5A"
     };
 
-    // ── initialize() ─────────────────────────────────────────
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -124,7 +122,7 @@ public class MainController implements Initializable {
         pqColRt.setCellValueFactory(d  -> new SimpleStringProperty(d.getValue()[4]));
     }
 
-    // ── handleAddProcess() ────────────────────────────────────
+
     @FXML
     private void handleAddProcess() {
         try {
@@ -151,7 +149,7 @@ public class MainController implements Initializable {
         }
     }
 
-    // ── handleRemoveProcess() ─────────────────────────────────
+
     @FXML
     private void handleRemoveProcess() {
         Process selected = processTable.getSelectionModel().getSelectedItem();
@@ -163,7 +161,7 @@ public class MainController implements Initializable {
         Scheduler.removeProcess(selected.getPid());
     }
 
-    // ── handleClear() ─────────────────────────────────────────
+
     @FXML
     private void handleClear() {
         stopTimers();
@@ -207,7 +205,7 @@ public class MainController implements Initializable {
         tfQuantum.clear();
     }
 
-    // ── handleRun() ───────────────────────────────────────────
+
     @FXML
     private void handleRun() {
         try {
@@ -219,10 +217,6 @@ public class MainController implements Initializable {
             stopTimers();
 
             SimulationResult result = Scheduler.start();
-            if (result == null) {
-                showError("Simulation failed. Check your process list.");
-                return;
-            }
             displayResults(result);
 
         } catch (NumberFormatException e) {
@@ -232,12 +226,11 @@ public class MainController implements Initializable {
         }
     }
 
-    // ── Scenario Handlers ─────────────────────────────────────
+
     @FXML
     private void handleScenarioA() {
         stopTimers();
         SimulationResult result = Scheduler.loadScenarioA();
-        if (result == null) { showError("Scenario A failed to load."); return; }
         syncProcessListFromScheduler();
         tfQuantum.setText(String.valueOf(Scheduler.quantum));
         displayResults(result);
@@ -247,7 +240,6 @@ public class MainController implements Initializable {
     private void handleScenarioB() {
         stopTimers();
         SimulationResult result = Scheduler.loadScenarioB();
-        if (result == null) { showError("Scenario B failed to load."); return; }
         syncProcessListFromScheduler();
         tfQuantum.setText(String.valueOf(Scheduler.quantum));
         displayResults(result);
@@ -257,7 +249,6 @@ public class MainController implements Initializable {
     private void handleScenarioC() {
         stopTimers();
         SimulationResult result = Scheduler.loadScenarioC();
-        if (result == null) { showError("Scenario C failed to load."); return; }
         syncProcessListFromScheduler();
         tfQuantum.setText(String.valueOf(Scheduler.quantum));
         displayResults(result);
@@ -267,19 +258,18 @@ public class MainController implements Initializable {
     private void handleScenarioD() {
         stopTimers();
         SimulationResult result = Scheduler.loadScenarioD();
-        if (result == null) { showError("Scenario D failed to load."); return; }
         syncProcessListFromScheduler();
         tfQuantum.setText(String.valueOf(Scheduler.quantum));
         displayResults(result);
     }
 
-    // ── syncProcessListFromScheduler() ────────────────────────
+
     private void syncProcessListFromScheduler() {
         processList.clear();
         processList.addAll(Scheduler.processes);
     }
 
-    // ── displayResults() ──────────────────────────────────────
+
     private void displayResults(SimulationResult result) {
         ScheduleResult rr = result.getRrResult();
         ScheduleResult pq = result.getPqResult();
@@ -292,7 +282,7 @@ public class MainController implements Initializable {
         startQueueTimers(rr, pq);
     }
 
-    // ── displayRRResults() ────────────────────────────────────
+
     private void displayRRResults(ScheduleResult result) {
         drawGanttChart(rrGanttPane, result.getGanttBlocks());
         fillResultsTable(rrResultTable, result);
@@ -303,7 +293,7 @@ public class MainController implements Initializable {
                 computeAvgRelativeRT(result)));
     }
 
-    // ── displayPQResults() ────────────────────────────────────
+
     private void displayPQResults(ScheduleResult result) {
         drawGanttChart(pqGanttPane, result.getGanttBlocks());
         fillResultsTable(pqResultTable, result);
@@ -314,7 +304,7 @@ public class MainController implements Initializable {
                 computeAvgRelativeRT(result)));
     }
 
-    // ── computeAvgRelativeRT() ────────────────────────────────
+
     private double computeAvgRelativeRT(ScheduleResult result) {
         List<Process> ps = result.getProcesses();
         if (ps == null || ps.isEmpty()) return 0;
@@ -324,7 +314,7 @@ public class MainController implements Initializable {
         return sum / ps.size();
     }
 
-    // ── drawGanttChart() ──────────────────────────────────────
+
     private void drawGanttChart(Pane pane, List<GanttBlock> blocks) {
         pane.getChildren().clear();
         if (blocks == null || blocks.isEmpty()) return;
@@ -376,7 +366,7 @@ public class MainController implements Initializable {
         pane.getChildren().add(endText);
     }
 
-    // ── fillResultsTable() ────────────────────────────────────
+
     private void fillResultsTable(TableView<String[]> table, ScheduleResult result) {
         ObservableList<String[]> rows = FXCollections.observableArrayList();
 
@@ -401,7 +391,7 @@ public class MainController implements Initializable {
         table.setItems(rows);
     }
 
-    // ── updateLeftPanel() ─────────────────────────────────────
+
     private void updateLeftPanel(ScheduleResult rr, ScheduleResult pq) {
 
         double rrWT  = rr.getAvgWaitingTime();
@@ -438,7 +428,7 @@ public class MainController implements Initializable {
         }
     }
 
-    // ── updateComparisonLabels() ──────────────────────────────
+
     private void updateComparisonLabels(ScheduleResult rr, ScheduleResult pq) {
         double rrRT = computeAvgRelativeRT(rr);
         double pqRT = computeAvgRelativeRT(pq);
@@ -481,7 +471,7 @@ public class MainController implements Initializable {
         }
     }
 
-    // ── displayConclusion() ───────────────────────────────────
+
     private void displayConclusion(ScheduleResult rr, ScheduleResult pq) {
 
         if (conclusionContent != null)
@@ -504,7 +494,7 @@ public class MainController implements Initializable {
         String wtLoser   = rrWT  <= pqWT  ? "Priority Scheduling" : "Round Robin";
         String tatLoser  = rrTAT <= pqTAT ? "Priority Scheduling" : "Round Robin";
 
-        // ── Q&A rows ─────────────────────────────────────────
+
 
         addAnalysisRow(
                 "Which algorithm had the shorter average waiting time?",
@@ -550,7 +540,7 @@ public class MainController implements Initializable {
                         + "every process gets a turn."
         );
 
-        // ── Written conclusion ────────────────────────────────
+
 
         int rrWins = 0, pqWins = 0;
         if (rrWT  < pqWT)  rrWins++; else if (pqWT  < rrWT)  pqWins++;
@@ -608,7 +598,7 @@ public class MainController implements Initializable {
         conclusionText.setText(sb.toString());
     }
 
-    // ── addAnalysisRow() ──────────────────────────────────────
+
     private void addAnalysisRow(String question, String answer) {
         VBox row = new VBox(4);
         row.setStyle(
@@ -630,7 +620,7 @@ public class MainController implements Initializable {
         conclusionContent.getChildren().add(row);
     }
 
-    // ── startQueueTimers() ────────────────────────────────────
+
     private void startQueueTimers(ScheduleResult rr, ScheduleResult pq) {
         List<String> rrStates = buildQueueSequence(rr.getGanttBlocks());
         List<String> pqStates = buildQueueSequence(pq.getGanttBlocks());
@@ -684,7 +674,7 @@ public class MainController implements Initializable {
         return states;
     }
 
-    // ── Helpers ───────────────────────────────────────────────
+
     private void stopTimers() {
         if (rrQueueTimer != null) rrQueueTimer.stop();
         if (pqQueueTimer != null) pqQueueTimer.stop();

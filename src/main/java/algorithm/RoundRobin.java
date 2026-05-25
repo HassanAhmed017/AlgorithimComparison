@@ -6,30 +6,25 @@ import model.Process;
 import model.ScheduleResult;
 
 public class RoundRobin {
-    //gantt block and idle 
-    private Queue<Process> readyQRR = new LinkedList<>();
-    ArrayList<GanttBlock> gantt = new ArrayList<>();
-
-    private int RRCnt = 0;//start of the process
-
-
 
     ScheduleResult startRR(int quantum, ArrayList<Process> processes) {
+        Queue<Process> readyQRR = new LinkedList<>();
+        ArrayList<GanttBlock> gantt = new ArrayList<>();
+        int RRCnt = 0;
+
         ArrayList<Process> allProcesses = new ArrayList<>(processes);
-        initializeReadyQ(processes);
+        ArrayList<Process> remaining = new ArrayList<>(processes);
 
-        while (!readyQRR.isEmpty() || !processes.isEmpty()) {
+        while (!readyQRR.isEmpty() || !remaining.isEmpty()) {
             if (readyQRR.isEmpty()) {
-
-                if (!processes.isEmpty()) {
-                    GanttBlock idle = new GanttBlock("IDLE", RRCnt, processes.get(0).getArrivalTime());
+                if (!remaining.isEmpty()) {
+                    GanttBlock idle = new GanttBlock("IDLE", RRCnt, remaining.get(0).getArrivalTime());
                     gantt.add(idle);
-                    RRCnt = processes.get(0).getArrivalTime();
-                    initializeReadyQ(processes);
+                    RRCnt = remaining.get(0).getArrivalTime();
+                    transferArrived(remaining, readyQRR, RRCnt);
                 } else {
                     break;
                 }
-
                 continue;
             }
             if (RRCnt < readyQRR.peek().getArrivalTime()) {
@@ -42,67 +37,59 @@ public class RoundRobin {
                 readyQRR.peek().setResponseTime(RRCnt);
             }
 
-            int remaining = readyQRR.peek().getRemainigBurstTime();
-            if (remaining <= quantum) {
-                readyQRR.peek().setRemainigBurstTime(0);
-                String PID = "P" + readyQRR.peek().getPid();
-                GanttBlock box = new GanttBlock(PID, RRCnt, RRCnt + remaining);
+            Process current = readyQRR.peek();
+            int remainingBurst = current.getRemainigBurstTime();
+            if (remainingBurst <= quantum) {
+                current.setRemainigBurstTime(0);
+                String PID = "P" + current.getPid();
+                GanttBlock box = new GanttBlock(PID, RRCnt, RRCnt + remainingBurst);
                 gantt.add(box);
-                RRCnt += remaining;
+                RRCnt += remainingBurst;
             } else {
-                readyQRR.peek().setRemainigBurstTime(remaining - quantum);
-                String PID = "P" + readyQRR.peek().getPid();
+                current.setRemainigBurstTime(remainingBurst - quantum);
+                String PID = "P" + current.getPid();
                 GanttBlock box = new GanttBlock(PID, RRCnt, RRCnt + quantum);
                 gantt.add(box);
                 RRCnt += quantum;
             }
 
-            if (readyQRR.peek().getRemainigBurstTime() == 0) {
-                readyQRR.peek().setFinishTime(RRCnt);
-                readyQRR.peek().setTurnaroundTime(
-                        readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime());
-                readyQRR.peek().setWaitingTime(
-                        readyQRR.peek().getFinishTime() - readyQRR.peek().getArrivalTime()
-                                - readyQRR.peek().getBrustTime());
+            if (current.getRemainigBurstTime() == 0) {
+                current.setFinishTime(RRCnt);
+                current.setTurnaroundTime(current.getFinishTime() - current.getArrivalTime());
+                current.setWaitingTime(current.getFinishTime() - current.getArrivalTime() - current.getBrustTime());
                 readyQRR.poll();
-                initializeReadyQ(processes);
+                transferArrived(remaining, readyQRR, RRCnt);
             } else {
-                readyQRR.add(readyQRR.peek());
-                readyQRR.poll();
-                initializeReadyQ(processes);
+                readyQRR.add(readyQRR.poll());
+                transferArrived(remaining, readyQRR, RRCnt);
             }
         }
 
-        ScheduleResult resultRR = calcAVGRR(allProcesses);
-        return resultRR;
+        return calcAVGRR(gantt, allProcesses);
     }
-    void initializeReadyQ(ArrayList<Process> processes) {
-        Iterator<Process> iterator = processes.iterator();
+
+    private void transferArrived(ArrayList<Process> source, Queue<Process> readyQ, int currentTime) {
+        Iterator<Process> iterator = source.iterator();
         while (iterator.hasNext()) {
             Process p = iterator.next();
-            if (p.getArrivalTime() <= RRCnt) {
-                readyQRR.add(p);
+            if (p.getArrivalTime() <= currentTime) {
+                readyQ.add(p);
                 iterator.remove();
             }
         }
     }
 
-    void printRQRR() {
-        System.out.println("Current Ready Queue: "+ readyQRR);
-    }
-
-    ScheduleResult calcAVGRR(ArrayList<Process> allprocesses){
+    private ScheduleResult calcAVGRR(ArrayList<GanttBlock> gantt, ArrayList<Process> allProcesses) {
         double sumTAT = 0;
         double sumRT = 0;
         double sumWT = 0;
-        int n = allprocesses.size();
-        for (int i = 0 ; i < n ; i++){
-            sumTAT += allprocesses.get(i).getTurnaroundTime();
-            sumRT += allprocesses.get(i).getResponseTime();
-            sumWT += allprocesses.get(i).getWaitingTime();
+        int n = allProcesses.size();
+        for (int i = 0; i < n; i++) {
+            sumTAT += allProcesses.get(i).getTurnaroundTime();
+            sumRT += (allProcesses.get(i).getResponseTime() - allProcesses.get(i).getArrivalTime());
+            sumWT += allProcesses.get(i).getWaitingTime();
         }
-        return new ScheduleResult(
-                gantt, allprocesses, sumWT / n, sumTAT / n, sumRT / n);
+        return new ScheduleResult(gantt, allProcesses, sumWT / n, sumTAT / n, sumRT / n);
     }
 
 }
